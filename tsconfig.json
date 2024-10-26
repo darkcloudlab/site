@@ -1,3 +1,7 @@
 {
-  "extends": "astro/tsconfigs/strict"
+  "extends": "astro/tsconfigs/strict",
+  "type": "module",
+  "files": [
+    "node_modules/gsap/types/index.d.ts"
+  ]
 }
