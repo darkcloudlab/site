@@ -167,180 +167,263 @@ const { title, body } = Astro.props;
         </span>
     </div>
     <div class="net-column" id="net-column">
-        <canvas id="c" width="500px" height="500px"></canvas>
+        <canvas id="canvas3d" width="500px" height="500px"></canvas>
     </div>
 </div>
 
+
 <script>
-    import { gsap } from "gsap";
-    import { TweenLite, TweenMax } from "gsap/all";
+import * as THREE from 'three';
+import { gsap } from 'gsap';
 
-    // Define types
-    interface Plus {
-        x: number;
-        y: number;
-        left: number;
-        top: number;
-        width: number;
-        height: number;
-        scale: number;
-        draw: (context: CanvasRenderingContext2D) => void;
+class WavyMesh {
+    private scene: THREE.Scene;
+    private camera: THREE.PerspectiveCamera;
+    private renderer: THREE.WebGLRenderer;
+    private geometry: THREE.BufferGeometry;
+    private material: THREE.LineBasicMaterial;
+    private mesh: THREE.LineSegments;
+    private mouse: THREE.Vector2;
+    private previousMouse: THREE.Vector2;
+    private originalPositions: Float32Array;
+    private isDragging: boolean;
+    private isMouseOver: boolean;
+
+    constructor(canvas: HTMLCanvasElement) {
+        this.scene = new THREE.Scene();
+        this.scene.background = null;
+        
+        const aspect = window.innerWidth / window.innerHeight;
+        this.camera = new THREE.PerspectiveCamera(45, aspect, 0.1, 1000);
+        this.camera.position.set(0, -60, 120);
+        this.camera.lookAt(0, 0, 0);
+        
+        this.renderer = new THREE.WebGLRenderer({ 
+            canvas, 
+            antialias: true,
+            alpha: true
+        });
+        this.renderer.setSize(window.innerWidth / 2, window.innerHeight / 2);
+        
+        this.mouse = new THREE.Vector2(0, 0);
+        this.previousMouse = new THREE.Vector2(0, 0);
+        this.isDragging = false;
+        this.isMouseOver = false;
+
+        const gridX = 25;
+        const gridY = 20;
+        const width = 120;
+        const height = 80;
+        
+        const vertices: number[] = [];
+        const indices: number[] = [];
+
+        // Create vertices with subtle waves
+        for (let i = 0; i < gridX; i++) {
+            for (let j = 0; j < gridY; j++) {
+                const u = (i / (gridX - 1) - 0.5) * width;
+                const v = (j / (gridY - 1) - 0.5) * height;
+                
+                const fx = 0.02;
+                const fy = 0.03;
+                
+                const z1 = Math.sin(u * fx * Math.PI + v * fy * Math.PI) * 12;
+                const z2 = Math.cos(v * fy * Math.PI - u * fx * Math.PI) * 8;
+                const z3 = Math.sin((u + v) * fx * 0.5 * Math.PI) * 4;
+                
+                const x = u;
+                const y = v;
+                const z = (z1 + z2 + z3) * 0.4;
+                
+                vertices.push(x, y, z);
+            }
+        }
+
+        // Create grid lines
+        for (let i = 0; i < gridX; i++) {
+            for (let j = 0; j < gridY; j++) {
+                const index = i * gridY + j;
+                if (j < gridY - 1) indices.push(index, index + 1);
+                if (i < gridX - 1) indices.push(index, index + gridY);
+            }
+        }
+
+        this.geometry = new THREE.BufferGeometry();
+        this.geometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
+        this.geometry.setIndex(indices);
+
+        this.originalPositions = new Float32Array(vertices);
+
+        this.material = new THREE.LineBasicMaterial({
+            color: 0x808080,
+            linewidth: 1,
+            opacity: 0.85,
+            transparent: true
+        });
+
+        this.mesh = new THREE.LineSegments(this.geometry, this.material);
+        this.mesh.rotation.x = -Math.PI * 0.18;
+        this.scene.add(this.mesh);
+
+        // Set initial cursor
+        canvas.style.cursor = 'grab';
+
+        // Add event listeners
+        canvas.addEventListener('mousemove', this.onMouseMove.bind(this));
+        canvas.addEventListener('mousedown', this.onMouseDown.bind(this));
+        canvas.addEventListener('mouseup', this.onMouseUp.bind(this));
+        canvas.addEventListener('mouseleave', this.onMouseLeave.bind(this));
+        canvas.addEventListener('mouseenter', () => {
+            this.isMouseOver = true;
+            canvas.style.cursor = 'grab';
+        });
+
+        this.render();
     }
 
-    interface Mouse {
-        x: number;
-        y: number;
+    private onMouseDown(event: MouseEvent): void {
+        this.isDragging = true;
+        (event.target as HTMLElement).style.cursor = 'grabbing';
+        this.updateMousePosition(event);
+        this.previousMouse.copy(this.mouse);
     }
 
-    // Create and setup the secondary canvas
-    const canvas2 = document.createElement("canvas");
-    const canvas2Context = canvas2.getContext("2d");
-
-    if (canvas2Context) {
-        canvas2.width = canvas2.height = 20;
-        canvas2Context.lineWidth = 2;
-        // Set the stroke style to white
-        canvas2Context.strokeStyle = 'white';
-        canvas2Context.beginPath();
-        canvas2Context.moveTo(10, 0);
-        canvas2Context.lineTo(10, 20);
-        canvas2Context.moveTo(0, 10);
-        canvas2Context.lineTo(20, 10);
-        canvas2Context.stroke();
+    private onMouseUp(event: MouseEvent): void {
+        this.isDragging = false;
+        (event.target as HTMLElement).style.cursor = 'grab';
     }
 
-    // Plus class constructor
-    class PlusClass implements Plus {
-        x: number = 0;
-        y: number = 0;
-        left: number = 0;
-        top: number = 0;
-        width: number = 0;
-        height: number = 0;
-        scale: number = 0.5;
+    private onMouseLeave(event: MouseEvent): void {
+        this.isDragging = false;
+        this.isMouseOver = false;
+        (event.target as HTMLElement).style.cursor = 'default';
+        this.resetMesh();
+    }
 
-        draw(context: CanvasRenderingContext2D): void {
-            context.setTransform(
-                this.scale,
-                0,
-                0,
-                this.scale,
-                this.left + this.x,
-                this.top + this.y,
+    private updateMousePosition(event: MouseEvent): void {
+        const rect = (event.target as HTMLElement).getBoundingClientRect();
+        this.mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+        this.mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+    }
+
+    private onMouseMove(event: MouseEvent): void {
+        this.updateMousePosition(event);
+        if (this.isDragging) {
+            (event.target as HTMLElement).style.cursor = 'grabbing';
+            this.updateMesh(true);
+        } else if (this.isMouseOver) {
+            this.updateMesh(false);
+        }
+        this.previousMouse.copy(this.mouse);
+    }
+
+    private resetMesh(): void {
+        const positions = this.geometry.attributes.position.array as Float32Array;
+        
+        const animationTarget: { [key: string]: number } = {};
+        for (let i = 0; i < positions.length; i++) {
+            animationTarget[`${i}`] = this.originalPositions[i];
+        }
+
+        gsap.to(positions, {
+            duration: 0.8,  // Slower reset for more organic feel
+            ...animationTarget,
+            ease: "elastic.out(1, 0.3)", // Added elastic easing for bouncy reset
+            onUpdate: () => {
+                this.geometry.attributes.position.needsUpdate = true;
+                this.render();
+            }
+        });
+    }
+
+    private updateMesh(isDragging: boolean): void {
+        const positions = this.geometry.attributes.position.array as Float32Array;
+        
+        const mouseWorld = new THREE.Vector3(
+            this.mouse.x * 60,
+            this.mouse.y * 40,
+            0
+        );
+
+        mouseWorld.applyAxisAngle(new THREE.Vector3(1, 0, 0), -Math.PI * 0.18);
+
+        // Calculate mouse movement for drag effect
+        const mouseDelta = isDragging ? 
+            new THREE.Vector2(
+                this.mouse.x - this.previousMouse.x,
+                this.mouse.y - this.previousMouse.y
+            ) : new THREE.Vector2(0, 0);
+
+        for (let i = 0; i < positions.length; i += 3) {
+            const vertexPosition = new THREE.Vector3(
+                positions[i],
+                positions[i + 1],
+                positions[i + 2]
             );
-            context.drawImage(canvas2, -10, -10, 20, 20);
-        }
-    }
 
-    // Get main canvas and context
-    const c = document.getElementById("c") as HTMLCanvasElement;
-    const context = c.getContext("2d");
-
-    if (!context) {
-        console.error("Could not get canvas context");
-        throw new Error("Canvas context not available");
-    }
-
-    const signs: Plus[][] = [];
-    const mouse: Mouse = { x: 0, y: 0 };
-    const gridLength = 9;
-
-    let mouseMoved = false;
-    let mouseOver = false;
-
-    // Initialize grid
-    for (let i = 0; i < gridLength; i++) {
-        signs[i] = [];
-        for (let j = 0; j < gridLength; j++) {
-            const sign = new PlusClass();
-            sign.left = (c.width / (gridLength + 1)) * (i + 1);
-            sign.top = (c.height / (gridLength + 1)) * (j + 1);
-            sign.width = 10;
-            sign.height = 10;
-            signs[i][j] = sign;
-        }
-    }
-
-    // Drawing function
-    function draw() {
-        if (mouseOver && mouseMoved) {
-            calculateIconPosition();
-            mouseMoved = false;
-        }
-
-        if (!context) return;
-
-        context.clearRect(0, 0, c.width, c.height);
-        context.save();
-
-        for (let i = 0; i < gridLength; i++) {
-            for (let j = 0; j < gridLength; j++) {
-                const sign = signs[i][j];
-                sign.draw(context);
+            const distance = mouseWorld.distanceTo(vertexPosition);
+            const maxDistance = isDragging ? 35 : 25; // Increased drag influence radius
+            let influence = Math.max(0, 1 - distance / maxDistance);
+            
+            // Enhanced influence curve for dragging
+            if (isDragging) {
+                influence = Math.pow(influence, 1.5); // More gradual falloff
             }
-        }
 
-        context.restore();
-    }
+            if (influence > 0) {
+                const direction = vertexPosition.sub(mouseWorld).normalize();
+                const targetPosition = new THREE.Vector3(
+                    this.originalPositions[i],
+                    this.originalPositions[i + 1],
+                    this.originalPositions[i + 2]
+                );
 
-    // Calculate icon positions
-    function calculateIconPosition() {
-        for (let i = 0; i < gridLength; i++) {
-            for (let j = 0; j < gridLength; j++) {
-                const sign = signs[i][j];
-                const radius = 20;
-                const dx = mouse.x - sign.left;
-                const dy = mouse.y - sign.top;
-                const dist = Math.sqrt(dx * dx + dy * dy) || 1;
-                const angle = Math.atan2(dy, dx);
+                // Enhanced drag effect with mouse movement
+                const stretchAmount = isDragging ? 
+                    15 + Math.sqrt(mouseDelta.x * mouseDelta.x + mouseDelta.y * mouseDelta.y) * 20 : 3;
+                
+                targetPosition.add(direction.multiplyScalar(influence * stretchAmount));
 
-                const finalRadius = dist < radius ? dist : radius;
+                const animationTarget: { [key: string]: number } = {
+                    [i.toString()]: targetPosition.x,
+                    [(i + 1).toString()]: targetPosition.y,
+                    [(i + 2).toString()]: targetPosition.z
+                };
 
-                gsap.to(sign, {
-                    duration: 0.3,
-                    scale: dist < radius ? 1 : 0.5,
-                    x: Math.cos(angle) * finalRadius,
-                    y: Math.sin(angle) * finalRadius,
+                gsap.to(positions, {
+                    duration: isDragging ? 0.15 : 0.3,
+                    ...animationTarget,
+                    ease: isDragging ? "power2.out" : "power1.out",
+                    onUpdate: () => {
+                        this.geometry.attributes.position.needsUpdate = true;
+                        this.render();
+                    }
                 });
             }
         }
     }
 
-    // Event handlers
-    function mouseMove(e: MouseEvent) {
-        const rect = c.getBoundingClientRect();
-        mouse.x = e.clientX - rect.left;
-        mouse.y = e.clientY - rect.top;
-        mouseMoved = true;
+    private render(): void {
+        this.renderer.render(this.scene, this.camera);
     }
 
-    function mouseEnter() {
-        mouseOver = true;
+    public onResize(): void {
+        const width = window.innerWidth;
+        const height = window.innerHeight;
+        
+        this.camera.aspect = width / height;
+        this.camera.updateProjectionMatrix();
+        this.renderer.setSize(width, height);
+        this.render();
     }
+}
 
-    function mouseLeave() {
-        mouseOver = false;
-        for (let i = 0; i < gridLength; i++) {
-            for (let j = 0; j < gridLength; j++) {
-                const sign = signs[i][j];
-                gsap.to(sign, {
-                    duration: 0.3,
-                    x: 0,
-                    y: 0,
-                    scale: 0.5,
-                });
-            }
-        }
-    }
+// Usage
+const canvas = document.querySelector('#canvas3d') as HTMLCanvasElement;
+const wavyMesh = new WavyMesh(canvas);
 
-    // Add event listeners
-    c.addEventListener("mousemove", mouseMove);
-    c.addEventListener("mouseenter", mouseEnter);
-    c.addEventListener("mouseleave", mouseLeave);
-
-    // Start animation loop
-    gsap.ticker.add(draw);
-</script>   
+window.addEventListener('resize', () => wavyMesh.onResize());
+    </script>
 
 <style>
     .hero {
