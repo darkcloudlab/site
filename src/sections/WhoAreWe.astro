@@ -1,0 +1,179 @@
+---
+// WhoAreWe.astro
+// This component implements a visually rich "Who Are We" section with an enhanced
+// background effect and carefully structured typography
+
+interface Props {
+  // Component can be extended with props if needed in the future
+}
+
+// Define our gradient configurations for the background lights
+const gradientDefinitions = {
+  leftLight: {
+    cx: "30%",
+    cy: "30%",
+    r: "70%", // Increased radius for more coverage
+    colors: {
+      start: "rgb(100, 149, 237)",
+      end: "rgb(100, 149, 237)"
+    }
+  },
+  rightLight: {
+    cx: "70%",
+    cy: "60%",
+    r: "65%", // Increased radius for more coverage
+    colors: {
+      start: "rgb(147, 197, 253)",
+      end: "rgb(147, 197, 253)"
+    }
+  }
+};
+---
+
+<section class="section-container">
+    <!-- Content Container with improved positioning -->
+    <div class="content-container">
+      <h2 class="title">Who are we</h2>
+      <div class="text-container">
+        <p class="description">
+          Founded by two innovators passionate about the intersection of 
+          artificial intelligence, mobile applications and intuitive design, 
+          we're on a mission to create software that doesn't just work – it delights.
+        </p>
+      </div>
+    </div>
+  <!-- SVG Background with enhanced opacity and size -->
+  <svg 
+    class="background-lights"
+    viewBox="0 0 100 100" 
+    preserveAspectRatio="none"
+  >
+    <defs>
+      <radialGradient 
+        id="leftLight" 
+        cx={gradientDefinitions.leftLight.cx} 
+        cy={gradientDefinitions.leftLight.cy} 
+        r={gradientDefinitions.leftLight.r} 
+        gradientUnits="userSpaceOnUse"
+      >
+        <stop offset="0%" stop-color={gradientDefinitions.leftLight.colors.start} stop-opacity="0.25" />
+        <stop offset="50%" stop-color={gradientDefinitions.leftLight.colors.start} stop-opacity="0.15" />
+        <stop offset="100%" stop-color={gradientDefinitions.leftLight.colors.end} stop-opacity="0" />
+      </radialGradient>
+      <radialGradient 
+        id="rightLight" 
+        cx={gradientDefinitions.rightLight.cx} 
+        cy={gradientDefinitions.rightLight.cy} 
+        r={gradientDefinitions.rightLight.r} 
+        gradientUnits="userSpaceOnUse"
+      >
+        <stop offset="0%" stop-color={gradientDefinitions.rightLight.colors.start} stop-opacity="0.22" />
+        <stop offset="50%" stop-color={gradientDefinitions.rightLight.colors.start} stop-opacity="0.12" />
+        <stop offset="100%" stop-color={gradientDefinitions.rightLight.colors.end} stop-opacity="0" />
+      </radialGradient>
+    </defs>
+    <rect x="0" y="0" width="100" height="100" fill="url(#leftLight)" />
+    <rect x="0" y="0" width="100" height="100" fill="url(#rightLight)" />
+  </svg>
+  
+</section>
+
+<style>
+  /* Base container styling */
+  .section-container {
+    position: relative;
+    min-height: 100vh;
+    min-width: 100vw;
+    background: linear-gradient(to bottom, rgb(17, 24, 39), rgb(31, 41, 55));
+    overflow: hidden;
+    isolation: isolate;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Enhanced SVG background styling */
+  .background-lights {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    opacity: 0.8; /* Increased opacity for more apparent effect */
+    mix-blend-mode: screen; /* Creates a more luminous effect */
+  }
+
+  /* Content container with proper stacking */
+  .content-container {
+    position: relative;
+    z-index: 2; /* Ensures content stays above the background */
+    width: 100%;
+    max-width: 80rem;
+    margin: 0 auto;
+    padding: 6rem 1.5rem;
+  }
+
+  /* Typography styling */
+  .title {
+    font-family: 'Geometria', system-ui, sans-serif;
+    font-size: clamp(3rem, 8vw, 6rem);
+    font-weight: 700;
+    color: rgb(255, 255, 255);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: clamp(3rem, 8vh, 6rem);
+    line-height: 1.2;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .text-container {
+    max-width: 48rem;
+  }
+
+  .description {
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: clamp(1.25rem, 3vw, 2rem);
+    line-height: 1.5;
+    color: rgb(243, 244, 246);
+    letter-spacing: 0.025em;
+  }
+
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .content-container {
+      padding: 4rem 1rem;
+    }
+
+    .text-container {
+      max-width: 100%;
+    }
+  }
+
+  /* Enhanced focus handling for accessibility */
+  .section-container:focus-within {
+    outline: none;
+    box-shadow: inset 0 0 0 4px rgba(59, 130, 246, 0.5);
+  }
+
+  /* Additional visual enhancements */
+  @media (prefers-reduced-motion: no-preference) {
+    .title {
+      animation: fadeSlideIn 0.8s ease-out;
+    }
+
+    .description {
+      animation: fadeSlideIn 0.8s ease-out 0.2s backwards;
+    }
+  }
+
+  @keyframes fadeSlideIn {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+</style>
