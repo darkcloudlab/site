@@ -180,22 +180,23 @@ class WavyMesh {
     private scene: THREE.Scene;
     private camera: THREE.PerspectiveCamera;
     private renderer: THREE.WebGLRenderer;
-    private geometry: THREE.BufferGeometry;
-    private material: THREE.LineBasicMaterial;
-    private mesh: THREE.LineSegments;
+    private geometry!: THREE.BufferGeometry;
+    private material!: THREE.LineBasicMaterial;
+    private mesh!: THREE.LineSegments;
     private mouse: THREE.Vector2;
     private previousMouse: THREE.Vector2;
-    private originalPositions: Float32Array;
+    private originalPositions!: Float32Array;
     private isDragging: boolean;
     private isMouseOver: boolean;
+    private resizeObserver!: ResizeObserver;
 
     constructor(canvas: HTMLCanvasElement) {
         this.scene = new THREE.Scene();
         this.scene.background = null;
         
-        const aspect = window.innerWidth / window.innerHeight;
-        this.camera = new THREE.PerspectiveCamera(45, aspect, 0.1, 1000);
-        this.camera.position.set(0, -60, 120);
+        // Initialize camera with default settings
+        this.camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+        this.camera.position.set(0, -90, 90);
         this.camera.lookAt(0, 0, 0);
         
         this.renderer = new THREE.WebGLRenderer({ 
@@ -203,43 +204,68 @@ class WavyMesh {
             antialias: true,
             alpha: true
         });
-        this.renderer.setSize(window.innerWidth / 2, window.innerHeight / 2);
         
+        // Initialize base states
         this.mouse = new THREE.Vector2(0, 0);
         this.previousMouse = new THREE.Vector2(0, 0);
         this.isDragging = false;
         this.isMouseOver = false;
 
-        const gridX = 25;
-        const gridY = 20;
-        const width = 120;
-        const height = 80;
+        // Initial setup
+        this.setupResizeObserver(canvas);
+        this.createMesh();
+        this.setupEventListeners(canvas);
+        this.updateSize();
+        this.render();
+    }
+
+    private createMesh(): void {
+        // Get container dimensions for responsive sizing
+        const container = this.renderer.domElement.parentElement;
+        const rect = container?.getBoundingClientRect();
+        const containerWidth = rect?.width || window.innerWidth;
+        
+        // Calculate base dimensions and scaling
+        const baseWidth = 60;
+        const baseHeight = 80;
+        const maxWidth = 1024; // Breakpoint for layout change
+        
+        // Scale mesh based on container width
+        let scale = 1;
+        if (containerWidth < maxWidth) {
+            // Calculate scale factor for smaller screens
+            scale = Math.max(0.5, containerWidth / maxWidth);
+        }
+        
+        const width = baseWidth * scale;
+        const height = baseHeight * scale;
+        
+        // Maintain grid density with size changes
+        const gridX = 20;
+        const gridY = Math.floor(20 * (height / width));
         
         const vertices: number[] = [];
         const indices: number[] = [];
 
-        // Create vertices with subtle waves
+        // Generate vertices with scaled dimensions
         for (let i = 0; i < gridX; i++) {
             for (let j = 0; j < gridY; j++) {
                 const u = (i / (gridX - 1) - 0.5) * width;
                 const v = (j / (gridY - 1) - 0.5) * height;
                 
-                const fx = 0.02;
-                const fy = 0.03;
+                // Scale wave parameters with mesh size
+                const fx = 0.02 / scale;
+                const fy = 0.03 / scale;
                 
-                const z1 = Math.sin(u * fx * Math.PI + v * fy * Math.PI) * 12;
-                const z2 = Math.cos(v * fy * Math.PI - u * fx * Math.PI) * 8;
-                const z3 = Math.sin((u + v) * fx * 0.5 * Math.PI) * 4;
+                const z1 = Math.sin(u * fx * Math.PI + v * fy * Math.PI) * 12 * scale;
+                const z2 = Math.cos(v * fy * Math.PI - u * fx * Math.PI) * 8 * scale;
+                const z3 = Math.sin((u + v) * fx * 0.5 * Math.PI) * 4 * scale;
                 
-                const x = u;
-                const y = v;
-                const z = (z1 + z2 + z3) * 0.4;
-                
-                vertices.push(x, y, z);
+                vertices.push(u, v, (z1 + z2 + z3) * 0.4);
             }
         }
 
-        // Create grid lines
+        // Create grid connections
         for (let i = 0; i < gridX; i++) {
             for (let j = 0; j < gridY; j++) {
                 const index = i * gridY + j;
@@ -248,10 +274,13 @@ class WavyMesh {
             }
         }
 
+        // Set up geometry and material
+        if (this.geometry) this.geometry.dispose();
+        if (this.material) this.material.dispose();
+
         this.geometry = new THREE.BufferGeometry();
         this.geometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
         this.geometry.setIndex(indices);
-
         this.originalPositions = new Float32Array(vertices);
 
         this.material = new THREE.LineBasicMaterial({
@@ -261,14 +290,41 @@ class WavyMesh {
             transparent: true
         });
 
+        // Create and position mesh
+        if (this.mesh) this.scene.remove(this.mesh);
         this.mesh = new THREE.LineSegments(this.geometry, this.material);
         this.mesh.rotation.x = -Math.PI * 0.18;
         this.scene.add(this.mesh);
+    }
 
-        // Set initial cursor
+    private setupResizeObserver(canvas: HTMLCanvasElement): void {
+        this.resizeObserver = new ResizeObserver(() => {
+            this.updateSize();
+            this.createMesh(); // Recreate mesh with new dimensions
+        });
+        
+        const container = canvas.parentElement;
+        if (container) {
+            this.resizeObserver.observe(container);
+        }
+    }
+
+    private updateSize(): void {
+        const container = this.renderer.domElement.parentElement;
+        if (!container) return;
+
+        const rect = container.getBoundingClientRect();
+        this.renderer.setSize(rect.width, rect.height, false);
+        
+        // Update camera for new container size
+        this.camera.aspect = rect.width / rect.height;
+        this.camera.updateProjectionMatrix();
+        
+        this.render();
+    }
+
+    private setupEventListeners(canvas: HTMLCanvasElement): void {
         canvas.style.cursor = 'grab';
-
-        // Add event listeners
         canvas.addEventListener('mousemove', this.onMouseMove.bind(this));
         canvas.addEventListener('mousedown', this.onMouseDown.bind(this));
         canvas.addEventListener('mouseup', this.onMouseUp.bind(this));
@@ -277,9 +333,8 @@ class WavyMesh {
             this.isMouseOver = true;
             canvas.style.cursor = 'grab';
         });
-
-        this.render();
     }
+
 
     private onMouseDown(event: MouseEvent): void {
         this.isDragging = true;
@@ -416,6 +471,15 @@ class WavyMesh {
         this.renderer.setSize(width, height);
         this.render();
     }
+
+    public cleanup(): void {
+        if (this.resizeObserver) {
+            this.resizeObserver.disconnect();
+        }
+        if (this.geometry) this.geometry.dispose();
+        if (this.material) this.material.dispose();
+        if (this.mesh) this.scene.remove(this.mesh);
+    }
 }
 
 // Usage
@@ -423,106 +487,81 @@ const canvas = document.querySelector('#canvas3d') as HTMLCanvasElement;
 const wavyMesh = new WavyMesh(canvas);
 
 window.addEventListener('resize', () => wavyMesh.onResize());
-    </script>
+</script>
 
 <style>
+/* Base layout that maintains side-by-side columns by default */
+.hero {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr;
+    min-height: 100vh;
+    width: 100%;
+    position: relative;
+}
+
+.text-column {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(3, 1fr);
+    padding: 2rem;
+    z-index: 1;
+}
+
+.net-column {
+    position: absolute;
+    left: 40%;
+    right: 0;
+    top: 20%;
+    bottom: 20%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+canvas {
+    display: block;
+    box-sizing: border-box;
+    max-width: 100%;
+    height: auto;
+}
+
+.nabla-span svg {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Responsive breakpoints */
+@media (max-width: 1024px) {
     .hero {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        grid-template-rows: 1fr;
-        height: 100vh;
-        width: 100vw;
-        gap: 0px;
-    }
-    canvas {
-        display: block;
-        box-sizing: border-box;
-        /* Removed the white border */
+        grid-template-columns: 1fr;
+        grid-template-rows: auto 1fr;
+        gap: 2rem;
     }
 
     .text-column {
-        display: grid;
-        grid-template-columns: 1fr;
-        grid-template-rows: repeat(3, 1fr);
+        padding: 1.5rem;
     }
 
     .net-column {
-        display: flex;
-        position: absolute;
-        left: 40.12%;
-        right: -10.12%;
-        top: 35.5%;
-        bottom: 14%;
-        border: none;
-        outline: none;
+        position: relative;
+        left: 0;
+        height: 60vh;
+        top: 0;
+        margin: 0 auto;
+        width: 100%;
+        max-width: 800px;
+        padding: 0 1rem;
     }
+}
 
-    .net-vector {
-        will-change: transform;
-        filter: url(#turbulence);
-    }
-
-    @keyframes floatAnimation {
-        0%,
-        100% {
-            transform: translate(0, 0);
-        }
-        50% {
-            transform: translate(2px, 2px);
-        }
-    }
-
-    #net {
-        animation: floatAnimation 8s ease-in-out infinite;
-    }
-</style>
-
-<style>
-    .hero {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        grid-template-rows: 1fr;
-        height: 100vh;
-        width: 100vw;
-        gap: 0px;
-    }
-    canvas {
-        display: block;
-        box-sizing: border-box;
-        /* border: solid 1px white; */
-        /*   width: 100%; */
-    }
-
+@media (max-width: 480px) {
     .text-column {
-        display: grid;
-        grid-template-columns: 1fr;
-        grid-template-rows: repeat(3, 1fr);
+        padding: 1rem;
     }
+
     .net-column {
-        display: flex;
-        position: absolute;
-        left: 40.12%;
-        right: -10.12%;
-        top: 35.5%;
-        bottom: 14%;
+        height: 50vh;
     }
-
-    .net-vector {
-        will-change: transform;
-        filter: url(#turbulence);
-    }
-
-    @keyframes floatAnimation {
-        0%,
-        100% {
-            transform: translate(0, 0);
-        }
-        50% {
-            transform: translate(2px, 2px);
-        }
-    }
-
-    #net {
-        animation: floatAnimation 8s ease-in-out infinite;
-    }
+}
 </style>
