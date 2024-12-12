@@ -506,6 +506,9 @@ window.addEventListener('resize', () => wavyMesh.onResize());
     grid-template-rows: repeat(3, 1fr);
     padding: 2rem;
     z-index: 1;
+    align-items: center; /* Center vertically */
+    justify-items: start; /* Align items to the left */
+    max-width: 800px; /* Control the width of the text column */
 }
 
 .net-column {
@@ -525,9 +528,13 @@ canvas {
     max-width: 100%;
     height: auto;
 }
-
+.nabla-span {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+}
 .nabla-span svg {
-    max-width: 100%;
+    max-width: 80%; /* Reduce from 100% to make SVGs smaller */
     height: auto;
 }
 
@@ -537,10 +544,13 @@ canvas {
         grid-template-columns: 1fr;
         grid-template-rows: auto 1fr;
         gap: 2rem;
+        padding: 0 2rem; /* Add padding for better spacing on smaller screens */
     }
 
     .text-column {
-        padding: 1.5rem;
+        margin: 0 auto; /* Center the text column on smaller screens */
+        width: 100%;
+        max-width: 600px; /* Adjust max-width for smaller screens */
     }
 
     .net-column {
