@@ -9,7 +9,7 @@ interface Props {
 const { title, body } = Astro.props;
 ---
 
-<div class="hero">
+<div class="hero-container">
     <Cloud />
     <div class="text-column">
         <span class="nabla-span"
@@ -491,12 +491,14 @@ window.addEventListener('resize', () => wavyMesh.onResize());
 
 <style>
 /* Base layout that maintains side-by-side columns by default */
-.hero {
+.hero-container {
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-template-rows: 1fr;
     min-height: 100vh;
     width: 100%;
+    min-width: 100vw;
+    margin: 0;
     position: relative;
 }
 
@@ -540,7 +542,7 @@ canvas {
 
 /* Responsive breakpoints */
 @media (max-width: 1024px) {
-    .hero {
+    .hero-container {
         grid-template-columns: 1fr;
         grid-template-rows: auto 1fr;
         gap: 2rem;
