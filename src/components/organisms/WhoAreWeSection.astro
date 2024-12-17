@@ -1,5 +1,5 @@
 ---
-// WhoAreWe.astro
+// WhoAreWeSection.astro
 // This component implements a visually rich "Who Are We" section with an enhanced
 // background effect and carefully structured typography
 
@@ -42,39 +42,7 @@ const gradientDefinitions = {
         </p>
       </div>
     </div>
-  <!-- SVG Background with enhanced opacity and size -->
-  <svg 
-    class="background-lights"
-    viewBox="0 0 100 100" 
-    preserveAspectRatio="none"
-  >
-    <defs>
-      <radialGradient 
-        id="leftLight" 
-        cx={gradientDefinitions.leftLight.cx} 
-        cy={gradientDefinitions.leftLight.cy} 
-        r={gradientDefinitions.leftLight.r} 
-        gradientUnits="userSpaceOnUse"
-      >
-        <stop offset="0%" stop-color={gradientDefinitions.leftLight.colors.start} stop-opacity="0.25" />
-        <stop offset="50%" stop-color={gradientDefinitions.leftLight.colors.start} stop-opacity="0.15" />
-        <stop offset="100%" stop-color={gradientDefinitions.leftLight.colors.end} stop-opacity="0" />
-      </radialGradient>
-      <radialGradient 
-        id="rightLight" 
-        cx={gradientDefinitions.rightLight.cx} 
-        cy={gradientDefinitions.rightLight.cy} 
-        r={gradientDefinitions.rightLight.r} 
-        gradientUnits="userSpaceOnUse"
-      >
-        <stop offset="0%" stop-color={gradientDefinitions.rightLight.colors.start} stop-opacity="0.22" />
-        <stop offset="50%" stop-color={gradientDefinitions.rightLight.colors.start} stop-opacity="0.12" />
-        <stop offset="100%" stop-color={gradientDefinitions.rightLight.colors.end} stop-opacity="0" />
-      </radialGradient>
-    </defs>
-    <rect x="0" y="0" width="100" height="100" fill="url(#leftLight)" />
-    <rect x="0" y="0" width="100" height="100" fill="url(#rightLight)" />
-  </svg>
+    <div class="background-overlay"></div>
   
 </section>
 
@@ -83,24 +51,26 @@ const gradientDefinitions = {
   .section-container {
     position: relative;
     min-height: 100vh;
-    min-width: 100vw;
-    background: linear-gradient(to bottom, rgb(17, 24, 39), rgb(31, 41, 55));
+    width: 100vw; 
+    background: url('/iPhone-15-Pro.svg') no-repeat center center; 
+    background-size: cover;
     overflow: hidden;
     isolation: isolate;
     display: flex;
     align-items: center;
     justify-content: center;
   }
-
-  /* Enhanced SVG background styling */
-  .background-lights {
+  .background-overlay {
     position: absolute;
     inset: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 1;
-    opacity: 0.8; /* Increased opacity for more apparent effect */
-    mix-blend-mode: screen; /* Creates a more luminous effect */
+    background: linear-gradient(   /* Dark overlay */
+      180deg,
+      rgba(0, 0, 0, 0.4) 0%,
+      rgba(0, 0, 0, 0.2) 50%,
+      rgba(0, 0, 0, 0.4) 100%
+    );
+    z-index: 1; /* Below the content but above the background */
+    pointer-events: none;
   }
 
   /* Content container with proper stacking */
