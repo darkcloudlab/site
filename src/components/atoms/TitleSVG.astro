@@ -1,0 +1,128 @@
+---
+// TitleSVG.astro
+interface Props {
+  svgPath: string; // Path for the title SVG content
+  level?: "h1" | "h2" | "h3" | "h4" | "h5" | "h6"; // Heading level
+  className?: string; // Optional additional classes
+}
+
+const { svgPath, level = "h1", className = "" } = Astro.props;
+
+// Tailwind utility classes for each heading level
+const headingStyles: Record<"h1" | "h2" | "h3" | "h4" | "h5" | "h6", string> = {
+  h1: "text-6xl font-bold",
+  h2: "text-5xl font-semibold",
+  h3: "text-4xl font-medium",
+  h4: "text-3xl font-medium",
+  h5: "text-2xl font-normal",
+  h6: "text-xl font-normal",
+};
+
+// Dynamic width and height for SVGs based on heading level
+const svgSizes = {
+  h1: { width: 852, height: 258 },
+  h2: { width: 700, height: 210 },
+  h3: { width: 600, height: 180 },
+  h4: { width: 500, height: 150 },
+  h5: { width: 400, height: 120 },
+  h6: { width: 300, height: 90 },
+};
+---
+
+{
+  level === "h1" && (
+    <h1 class={`title-svg ${headingStyles[level]} ${className}`}>
+      <svg
+        viewBox="0 0 852 258"
+        width={svgSizes[level].width}
+        height={svgSizes[level].height}
+        xmlns="http://www.w3.org/2000/svg"
+        class="w-auto"
+      >
+        <path d={svgPath} fill="white" />
+      </svg>
+    </h1>
+  )
+}
+{
+  level === "h2" && (
+    <h2 class={`title-svg ${headingStyles[level]} ${className}`}>
+      <svg
+        viewBox="0 0 852 258"
+        width={svgSizes[level].width}
+        height={svgSizes[level].height}
+        xmlns="http://www.w3.org/2000/svg"
+        class="w-auto"
+      >
+        <path d={svgPath} fill="white" />
+      </svg>
+    </h2>
+  )
+}
+{
+  level === "h3" && (
+    <h3 class={`title-svg ${headingStyles[level]} ${className}`}>
+      <svg
+        viewBox="0 0 852 258"
+        width={svgSizes[level].width}
+        height={svgSizes[level].height}
+        xmlns="http://www.w3.org/2000/svg"
+        class="w-auto"
+      >
+        <path d={svgPath} fill="white" />
+      </svg>
+    </h3>
+  )
+}
+{
+  level === "h4" && (
+    <h4 class={`title-svg ${headingStyles[level]} ${className}`}>
+      <svg
+        viewBox="0 0 852 258"
+        width={svgSizes[level].width}
+        height={svgSizes[level].height}
+        xmlns="http://www.w3.org/2000/svg"
+        class="w-auto"
+      >
+        <path d={svgPath} fill="white" />
+      </svg>
+    </h4>
+  )
+}
+{
+  level === "h5" && (
+    <h5 class={`title-svg ${headingStyles[level]} ${className}`}>
+      <svg
+        viewBox="0 0 852 258"
+        width={svgSizes[level].width}
+        height={svgSizes[level].height}
+        xmlns="http://www.w3.org/2000/svg"
+        class="w-auto"
+      >
+        <path d={svgPath} fill="white" />
+      </svg>
+    </h5>
+  )
+}
+{
+  level === "h6" && (
+    <h6 class={`title-svg ${headingStyles[level]} ${className}`}>
+      <svg
+        viewBox="0 0 852 258"
+        width={svgSizes[level].width}
+        height={svgSizes[level].height}
+        xmlns="http://www.w3.org/2000/svg"
+        class="w-auto"
+      >
+        <path d={svgPath} fill="white" />
+      </svg>
+    </h6>
+  )
+}
+
+<style>
+  .title-svg {
+    line-height: 1.2;
+    text-transform: uppercase;
+  }
+</style>

@@ -1,8 +1,7 @@
 ---
 // WhoAreWeSection.astro
-// This component implements a visually rich "Who Are We" section with an enhanced
-// background effect and carefully structured typography
-
+// This component implements a visually rich "Who Are We" section with a background image
+import TitleSVG from "../atoms/TitleSVG.astro";
 interface Props {
   // Component can be extended with props if needed in the future
 }
@@ -15,8 +14,8 @@ const gradientDefinitions = {
     r: "70%", // Increased radius for more coverage
     colors: {
       start: "rgb(100, 149, 237)",
-      end: "rgb(100, 149, 237)"
-    }
+      end: "rgb(100, 149, 237)",
+    },
   },
   rightLight: {
     cx: "70%",
@@ -24,26 +23,34 @@ const gradientDefinitions = {
     r: "65%", // Increased radius for more coverage
     colors: {
       start: "rgb(147, 197, 253)",
-      end: "rgb(147, 197, 253)"
-    }
-  }
+      end: "rgb(147, 197, 253)",
+    },
+  },
 };
 ---
 
 <section class="section-container">
-    <!-- Content Container with improved positioning -->
-    <div class="content-container">
-      <h2 class="title">Who are we</h2>
-      <div class="text-container">
-        <p class="description">
-          Founded by two innovators passionate about the intersection of 
-          artificial intelligence, mobile applications and intuitive design, 
-          we're on a mission to create software that doesn't just work – it delights.
-        </p>
-      </div>
+  <!-- Content Container with improved positioning -->
+  <div class="content-container">
+    <div class="title-container flex items-center justify-center gap-4">
+      <TitleSVG
+        svgPath="M544.896 43.9996L561.235 34.555C563.376 33.2958 565.265 33.1384 566.902 34.0828C568.539 35.0273 569.358 36.7588 569.358 39.2773V53.4441C569.358 55.0811 568.98 56.8441 568.224 58.733C567.469 60.6219 566.461 62.3849 565.202 64.0219C564.006 65.596 562.683 66.7923 561.235 67.6108L553.019 72.3331C550.878 73.5923 548.989 73.7497 547.352 72.8053C545.715 71.8608 544.896 70.1294 544.896 67.6108V89.3332L569.358 75.1664V84.6109L544.896 98.7777C542.693 100.037 540.772 100.194 539.135 99.2499C537.498 98.3055 536.68 96.574 536.68 94.0554V58.1663C536.68 56.4663 537.057 54.7033 537.813 52.8774C538.568 50.9885 539.576 49.257 540.835 47.6829C542.094 46.0459 543.448 44.8181 544.896 43.9996ZM561.235 43.9996L544.896 53.4441V67.6108L561.235 58.1663V43.9996ZM569.358 75.1664L544.896 89.3332L536.68 84.6109L561.235 70.4442L569.358 75.1664ZM561.235 43.9996V58.1663L553.019 53.4441V39.2773L561.235 43.9996ZM544.896 67.6108C544.896 70.1294 545.715 71.8608 547.352 72.8053L539.135 68.083C537.498 67.1386 536.68 65.4071 536.68 62.8886L544.896 67.6108ZM561.235 58.1663L544.896 67.6108L536.68 62.8886L553.019 53.4441L561.235 58.1663ZM566.902 34.0828C565.265 33.1384 563.376 33.2958 561.235 34.555L544.896 43.9996C543.448 44.8181 542.094 46.0459 540.835 47.6829C539.576 49.257 538.568 50.9885 537.813 52.8774C537.057 54.7033 536.68 56.4663 536.68 58.1663V94.0554C536.68 96.574 537.498 98.3055 539.135 99.2499L530.918 94.5277C529.281 93.5832 528.463 91.8517 528.463 89.3332V53.4441C528.463 51.744 528.841 49.9811 529.596 48.1551C530.352 46.2662 531.359 44.5347 532.618 42.9607C533.878 41.3236 535.231 40.0958 536.68 39.2773L553.019 29.8328C555.222 28.5735 557.143 28.4161 558.78 29.3606L566.902 34.0828Z"
+        level="h3"
+      />
+      <TitleSVG
+        svgPath="M481.032 41.6385L489.249 36.9162V83.1943L499.827 77.0554V30.7773L508.044 26.055V62.8886C508.044 64.5256 507.666 66.2886 506.91 68.1775C506.155 70.0664 505.147 71.8294 503.888 73.4664C502.629 75.0405 501.275 76.2368 499.827 77.0554C499.827 78.6924 499.449 80.4554 498.694 82.3443C497.938 84.2332 496.931 85.9962 495.671 87.6332C494.475 89.2073 493.153 90.4036 491.705 91.2221L478.577 98.7777C476.436 100.037 474.547 100.194 472.91 99.25C471.273 98.3055 470.454 96.574 470.454 94.0555L481.032 87.9165V41.6385ZM462.238 52.4996L470.454 47.7774V94.0555C468.251 95.3147 466.33 95.4721 464.693 94.5277C463.056 93.5832 462.238 91.8518 462.238 89.3332V52.4996ZM481.032 87.9165L470.454 94.0555L462.238 89.3332L472.816 83.1943L481.032 87.9165ZM470.454 94.0555C470.454 96.574 471.273 98.3055 472.91 99.25L464.693 94.5277C463.056 93.5832 462.238 91.8518 462.238 89.3332L470.454 94.0555ZM508.044 26.055L499.827 30.7773L491.705 26.055L499.827 21.3328L508.044 26.055ZM499.827 30.7773V77.0554L491.705 72.3331V26.055L499.827 30.7773ZM499.827 77.0554L489.249 83.1943L481.032 78.472L491.705 72.3331L499.827 77.0554ZM489.249 36.9162L481.032 41.6385L472.816 36.9162L481.032 32.1939L489.249 36.9162ZM481.032 41.6385V87.9165L472.816 83.1943V36.9162L481.032 41.6385ZM470.454 47.7774L462.238 52.4996L454.021 47.7774L462.238 43.0551L470.454 47.7774ZM462.238 52.4996V89.3332C462.238 91.8518 463.056 93.5832 464.693 94.5277L456.477 89.8054C454.84 88.861 454.021 87.1295 454.021 84.611V47.7774L462.238 52.4996Z"
+        level="h3"
+      />
     </div>
-    <div class="background-overlay"></div>
-  
+    <div class="text-container">
+      <p class="description">
+        Founded by two innovators passionate about the intersection of
+        artificial intelligence, mobile applications and intuitive design, we're
+        on a mission to create software that doesn't just work – it delights.
+      </p>
+    </div>
+  </div>
+  <div class="background-overlay"></div>
 </section>
 
 <style>
@@ -51,8 +58,8 @@ const gradientDefinitions = {
   .section-container {
     position: relative;
     min-height: 100vh;
-    width: 100vw; 
-    background: url('/iPhone-15-Pro.svg') no-repeat center center; 
+    width: 100vw;
+    background: url("/iPhone-15-Pro.svg") no-repeat center center;
     background-size: cover;
     overflow: hidden;
     isolation: isolate;
@@ -63,8 +70,8 @@ const gradientDefinitions = {
   .background-overlay {
     position: absolute;
     inset: 0;
-    background: linear-gradient(   /* Dark overlay */
-      180deg,
+    background: linear-gradient(
+      /* Dark overlay */ 180deg,
       rgba(0, 0, 0, 0.4) 0%,
       rgba(0, 0, 0, 0.2) 50%,
       rgba(0, 0, 0, 0.4) 100%
@@ -83,25 +90,12 @@ const gradientDefinitions = {
     padding: 6rem 1.5rem;
   }
 
-  /* Typography styling */
-  .title {
-    font-family: 'Geometria', system-ui, sans-serif;
-    font-size: clamp(3rem, 8vw, 6rem);
-    font-weight: 700;
-    color: rgb(255, 255, 255);
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    margin-bottom: clamp(3rem, 8vh, 6rem);
-    line-height: 1.2;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  }
-
   .text-container {
     max-width: 48rem;
   }
 
   .description {
-    font-family: 'Inter', system-ui, sans-serif;
+    font-family: "Inter", system-ui, sans-serif;
     font-size: clamp(1.25rem, 3vw, 2rem);
     line-height: 1.5;
     color: rgb(243, 244, 246);

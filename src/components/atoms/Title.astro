@@ -1,0 +1,30 @@
+---
+// Title.astro
+interface Props {
+  text: string; // Title text
+  level?: string; // HTML heading level: h1, h2, etc.
+  className?: string; // Additional optional styling classes
+}
+
+const { text, level = "h1", className = "" } = Astro.props;
+---
+
+<component is={level} class={`title-atom ${className}`}>
+  {text}
+</component>
+
+<style>
+  .title-atom {
+    font-family: "Nabla", sans-serif;
+    font-size: clamp(3rem, 8vw, 6rem);
+    font-weight: 700;
+    text-transform: uppercase;
+    color: white;
+    text-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    margin: 0;
+    padding: 0;
+    line-height: 1.2;
+    letter-spacing: 0.1em;
+    text-align: center;
+  }
+</style>
