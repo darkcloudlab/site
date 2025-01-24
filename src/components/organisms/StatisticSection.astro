@@ -1,0 +1,95 @@
+---
+// organisms/StatisticSection.astro
+import StatsCard from "../molecules/StatsCard.astro";
+
+const stars = Array(5).fill("★");
+---
+
+<section class="stats-section">
+  <div class="content-wrapper">
+    <div class="grid-container">
+      <StatsCard
+        title="Mobile Development"
+        subtitle="React Native & Flutter specialists"
+      />
+
+      <div class="row-span-2">
+        <div
+          class="bg-gradient-to-br from-red-500 to-pink-600 text-white rounded-3xl p-6 relative overflow-hidden"
+        >
+          <div class="flex flex-col gap-4">
+            <div>
+              <p class="text-xl opacity-80">Insert some statistic</p>
+              <h2 class="text-6xl font-bold mt-2">100k</h2>
+              <p class="text-xl opacity-80 mt-2">Insert some statistic name</p>
+            </div>
+            <div
+              class="absolute bottom-0 right-0 w-32 h-32 transform translate-x-8 translate-y-8"
+            >
+              <div
+                class="w-full h-full bg-black rounded-lg transform -rotate-12"
+              >
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <StatsCard title="Create with AI" subtitle="Harness Machine learning" />
+
+      <div class="flex flex-col gap-2">
+        <div class="flex items-center gap-1">
+          {stars.map((star) => <span class="text-yellow-400">{star}</span>)}
+        </div>
+        <StatsCard title="Info" subtitle="Insert some statistic" />
+      </div>
+
+      <StatsCard
+        title="We Are"
+        subtitle="Agile. Focused. Personal."
+        variant="dark"
+      />
+    </div>
+  </div>
+</section>
+
+<style>
+  .stats-section {
+    position: relative;
+    min-height: 100vh;
+    width: 100vw;
+    background-color: rgb(37, 99, 235); /* Tailwind blue-600 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    padding: 2rem 0;
+  }
+
+  .content-wrapper {
+    width: 100%;
+    max-width: 80rem;
+    margin: 0 auto;
+    padding: 6rem 1.5rem;
+  }
+
+  .grid-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    width: 100%;
+  }
+
+  /* Responsive adjustments */
+  @media (min-width: 1024px) {
+    .grid-container {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  @media (max-width: 768px) {
+    .content-wrapper {
+      padding: 4rem 1rem;
+    }
+  }
+</style>

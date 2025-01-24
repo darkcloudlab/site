@@ -1,0 +1,71 @@
+---
+// molecules/StatsCard.astro
+interface Props {
+  title: string;
+  subtitle: string;
+  variant?: "default" | "gradient" | "dark";
+  className?: string;
+}
+
+const { title, subtitle, variant = "default", className = "" } = Astro.props;
+
+const variants = {
+  default: "text-white glassmorphic-card",
+  gradient: "text-white glassmorphic-card gradient-variant",
+  dark: "text-white glassmorphic-card dark-variant",
+};
+
+const cardStyle = `rounded-3xl p-6 relative overflow-hidden ${variants[variant]} ${className}`;
+---
+
+<div class={cardStyle}>
+  <div class="flex flex-col gap-2 relative z-10">
+    <h3 class="text-2xl font-bold">{title}</h3>
+    <p class="text-lg opacity-80">{subtitle}</p>
+    <slot />
+  </div>
+</div>
+
+<style>
+  .glassmorphic-card {
+    /* The background gradient now fills the entire card */
+    background: linear-gradient(
+      135deg,
+      rgba(37, 99, 235, 0.95) 0%,
+      rgba(37, 99, 235, 0.85) 100%
+    );
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(8px);
+  }
+
+  /* Shine effect layer that extends fully to the borders */
+  .glassmorphic-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.1) 0%,
+      rgba(255, 255, 255, 0.05) 100%
+    );
+  }
+
+  .gradient-variant {
+    background: linear-gradient(
+      135deg,
+      rgba(239, 68, 68, 0.95) 0%,
+      rgba(219, 39, 119, 0.85) 100%
+    );
+  }
+
+  .dark-variant {
+    background: linear-gradient(
+      135deg,
+      rgba(23, 37, 84, 0.95) 0%,
+      rgba(23, 37, 84, 0.85) 100%
+    );
+  }
+</style>

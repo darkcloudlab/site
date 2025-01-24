@@ -2,47 +2,49 @@
 import Layout from "../layouts/Layout.astro";
 import Hero from "../components/organisms/HeroSection.astro";
 import WhoAreWe from "../components/organisms/WhoAreWeSection.astro";
+import StatisticSection from "../components/organisms/StatisticSection.astro";
 ---
 
 <Layout title="Welcome to DarkCloudLab">
   <main>
     <Hero title="DCL" body="Time to build" />
     <WhoAreWe />
+    <StatisticSection />
   </main>
-</Layout>
 
-<style>
-  main {
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    max-width: calc(100% - 2rem);
-    color: white;
-    font-size: 20px;
-    line-height: 1.6;
-    overflow-x: none;
-  }
-  .astro-a {
-    position: absolute;
-    top: -32px;
-    left: 50%;
-    transform: translatex(-50%);
-    width: 220px;
-    height: auto;
-    z-index: -1;
-  }
-  h1 {
-    font-size: 4rem;
-    font-weight: 700;
-    line-height: 1;
-    text-align: center;
-    margin-bottom: 1em;
-  }
-  .text-gradient {
-    background-image: var(--accent-gradient);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-size: 400%;
-    background-position: 0%;
-  }
-</style>
+  <style>
+    main {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      max-width: calc(100% - 2rem);
+      color: white;
+      font-size: 20px;
+      line-height: 1.6;
+      overflow-x: none;
+    }
+    .astro-a {
+      position: absolute;
+      top: -32px;
+      left: 50%;
+      transform: translatex(-50%);
+      width: 220px;
+      height: auto;
+      z-index: -1;
+    }
+    h1 {
+      font-size: 4rem;
+      font-weight: 700;
+      line-height: 1;
+      text-align: center;
+      margin-bottom: 1em;
+    }
+    .text-gradient {
+      background-image: var(--accent-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-size: 400%;
+      background-position: 0%;
+    }
+  </style>
+</Layout>
