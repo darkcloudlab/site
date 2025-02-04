@@ -1,0 +1,93 @@
+---
+// OurEthosSection.astro
+interface Props {
+  title?: string;
+}
+
+const { title = "Our Ethos" } = Astro.props;
+---
+
+<section
+  class="w-screen relative bg-gray-900 py-16 overflow-hidden min-h-screen flex items-center justify-center"
+>
+  <div class="absolute inset-0 bg-gray-900"></div>
+
+  <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <h2 class="text-4xl font-bold text-white mb-12 text-center">{title}</h2>
+
+    <!-- First Row with Left Overlay -->
+    <div class="relative mb-12">
+      <!-- Image Container with Absolute Positioning -->
+      <div
+        class="absolute left-0 top-1/2 -translate-y-1/2 w-5/12 aspect-video z-10"
+      >
+        <div class="relative w-full h-full">
+          <img
+            src="/api/placeholder/400/320"
+            alt="Laptop showing company logo"
+            class="w-full h-full object-cover rounded-2xl shadow-xl"
+          />
+        </div>
+      </div>
+
+      <!-- Blue Card with Text -->
+      <div class="relative ml-auto w-10/12 bg-blue-600 rounded-2xl p-8 pl-24">
+        <div class="max-w-2xl ml-auto">
+          <h3 class="text-white text-xl font-semibold mb-4">
+            Beyond the Dark Cloud
+          </h3>
+          <p class="text-white text-lg leading-relaxed">
+            Beyond the Dark Cloud lies our brightest purpose: creating solutions
+            that genuinely improve lives. We believe technology should be a
+            force for good, empowering users and communities alike. Every line
+            of code we write, every interface we design, and every solution we
+            develop is guided by a simple question: How will this make your
+            world better? This commitment to positive impact isn't just a
+            tagline – it's woven into the fabric of every project we undertake.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Second Row with Right Overlay -->
+    <div class="relative">
+      <!-- Image Container with Absolute Positioning -->
+      <div
+        class="absolute right-0 top-1/2 -translate-y-1/2 w-5/12 aspect-video z-10"
+      >
+        <div class="relative w-full h-full">
+          <img
+            src="/api/placeholder/400/320"
+            alt="Company logo on textured background"
+            class="w-full h-full object-cover rounded-2xl shadow-xl"
+          />
+        </div>
+      </div>
+
+      <!-- Blue Card with Text -->
+      <div class="relative mr-auto w-10/12 bg-blue-600 rounded-2xl p-8 pr-24">
+        <div class="max-w-2xl">
+          <h3 class="text-white text-xl font-semibold mb-4">
+            Intelligent Solutions
+          </h3>
+          <p class="text-white text-lg leading-relaxed">
+            We specialize in developing intelligent software solutions that
+            bridge the gap between powerful technology and everyday usability.
+            Our expertise spans mobile application development, artificial
+            intelligence integration, and scalable SaaS platforms. Whether it's
+            creating AI-powered mobile apps that adapt to user behavior or
+            building robust SaaS solutions that grow with your business, we
+            deliver products that stand out in today's crowded digital
+            landscape.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  section {
+    contain: paint;
+  }
+</style>
