@@ -15,13 +15,13 @@ const variants = {
   dark: "text-white glassmorphic-card dark-variant",
 };
 
-const cardStyle = `rounded-3xl p-6 relative overflow-hidden ${variants[variant]} ${className}`;
+const cardStyle = `rounded-3xl p-6 relative overflow-hidden min-h-[240px] flex items-center justify-center ${variants[variant]} ${className}`;
 ---
 
 <div class={cardStyle}>
-  <div class="flex flex-col gap-2 relative z-10">
+  <div class="flex flex-col gap-2 relative z-10 text-center w-full">
     <h3 class="text-2xl font-bold">{title}</h3>
-    <p class="text-lg opacity-80">{subtitle}</p>
+    <p class="text-lg opacity-80 mt-2">{subtitle}</p>
     <slot />
   </div>
 </div>
