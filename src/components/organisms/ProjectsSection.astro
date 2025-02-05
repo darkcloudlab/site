@@ -1,0 +1,128 @@
+---
+// ProjectsSection.astro
+// This component displays a project listing with a dynamic gradient background
+// and responsive table layout
+
+interface Project {
+  title: string;
+  date: string;
+  type: string;
+}
+
+// Sample project data - you can replace this with your actual data source
+const projects: Project[] = [
+  {
+    title: "Micro SaaS - Get your business connected",
+    date: "01/02/24",
+    type: "Saas",
+  },
+  {
+    title: "Evo - Redesign of the BC Evo App",
+    date: "01/02/24",
+    type: "Client",
+  },
+  {
+    title: "AI Integration - getting your AI online",
+    date: "01/02/24",
+    type: "Research",
+  },
+  {
+    title: "ChatTo",
+    date: "01/02/24",
+    type: "AI (Client)",
+  },
+  {
+    title: "Interview Prep",
+    date: "01/02/24",
+    type: "AI (Client)",
+  },
+];
+---
+
+<section
+  class="relative w-screen min-h-screen bg-gray-900 py-16 overflow-hidden"
+>
+  <!-- Radial gradient background effect -->
+  <div class="absolute inset-0 overflow-hidden">
+    <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full">
+      <div
+        class="absolute top-40 right-0 w-[800px] h-[800px] rounded-full bg-blue-600/20 blur-3xl"
+      >
+      </div>
+      <div
+        class="absolute top-80 right-40 w-[600px] h-[600px] rounded-full bg-purple-600/20 blur-3xl"
+      >
+      </div>
+    </div>
+  </div>
+
+  <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- Section heading with enhanced typography -->
+    <h2 class="text-6xl font-bold text-white mb-16 text-center tracking-wider">
+      Projects
+    </h2>
+
+    <!-- Project table with responsive design -->
+    <div class="overflow-x-auto">
+      <table class="w-full">
+        <!-- Table header with subtle divider -->
+        <thead>
+          <tr class="border-b border-white/10">
+            <th class="text-left py-4 text-gray-400 font-normal text-lg"
+              >Title</th
+            >
+            <th class="text-left py-4 text-gray-400 font-normal text-lg"
+              >Date</th
+            >
+            <th class="text-left py-4 text-gray-400 font-normal text-lg"
+              >Type</th
+            >
+          </tr>
+        </thead>
+        <!-- Table body with hover effects -->
+        <tbody>
+          {
+            projects.map((project) => (
+              <tr class="border-b border-white/10 hover:bg-white/5 transition-colors">
+                <td class="py-6">
+                  <h3 class="text-white text-xl font-medium">
+                    {project.title}
+                  </h3>
+                </td>
+                <td class="py-6">
+                  <span class="text-white text-xl">{project.date}</span>
+                </td>
+                <td class="py-6">
+                  <span class="text-white text-xl">{project.type}</span>
+                </td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<style>
+  /* Remove default section margins and ensure full width */
+  section {
+    margin-left: calc(-50vw + 50%);
+    margin-right: calc(-50vw + 50%);
+    contain: paint;
+  }
+
+  /* Enhanced table styles */
+  table {
+    border-collapse: separate;
+    border-spacing: 0;
+  }
+
+  /* Gradient text effect for the heading */
+  h2 {
+    background: linear-gradient(to right, #fff, #e2e8f0);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+</style>
