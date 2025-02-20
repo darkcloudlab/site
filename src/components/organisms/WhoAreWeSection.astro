@@ -29,6 +29,7 @@ const gradientDefinitions = {
 ---
 
 <section class="section-container">
+  <div class="background-container"></div>
   <!-- Content Container with improved positioning -->
   <div class="content-container">
     <div class="title-container">
@@ -82,13 +83,29 @@ const gradientDefinitions = {
     position: relative;
     min-height: 100vh;
     width: 100vw;
-    background: url("/iPhone-15-Pro.svg") no-repeat center center;
-    background-size: cover;
     overflow: hidden;
     isolation: isolate;
     display: flex;
     align-items: center;
     justify-content: center;
+  }
+
+  .background-container {
+    position: absolute;
+    inset: 0;
+    background: url("/iPhone-15-Pro.svg") no-repeat right center;
+    background-size: 65% auto;
+    z-index: 0;
+    mask-image: radial-gradient(
+      circle at 70% center,
+      black 30%,
+      transparent 80%
+    );
+    -webkit-mask-image: radial-gradient(
+      circle at 70% center,
+      black 30%,
+      transparent 80%
+    );
   }
   .background-overlay {
     position: absolute;
