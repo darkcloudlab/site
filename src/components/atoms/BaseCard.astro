@@ -3,13 +3,13 @@
 interface Props {
   variant?: "default" | "gradient" | "dark";
   className?: string;
-  minHeight?: string;
+  aspectRatio?: "square" | "rectangle" | "featured";
 }
 
 const {
   variant = "default",
   className = "",
-  minHeight = "240px",
+  aspectRatio = "square",
 } = Astro.props;
 
 // Variant background gradients
@@ -21,43 +21,48 @@ const variantGradients = {
   dark: "background: linear-gradient(135deg, rgba(23, 37, 84, 0.95) 0%, rgba(23, 37, 84, 0.85) 100%);",
 };
 
-const cardStyle = `tilt-card glassmorphic-effect p-6 text-white relative overflow-hidden ${className}`;
-const inlineStyle = `${variantGradients[variant]} min-height: ${minHeight};`;
+// Determine aspect ratio class based on the prop
+const aspectClasses = {
+  square: "aspect-square", // This ensures a perfect 1:1 aspect ratio
+  rectangle: "min-h-[240px]", // Traditional rectangle shape
+  featured: "min-h-[520px]", // Taller featured card
+};
+
+const aspectClass = aspectClasses[aspectRatio];
+const cardStyle = `tilt-card glassmorphic-effect p-6 text-white relative overflow-hidden ${aspectClass} ${className}`;
 ---
 
-<div class={cardStyle} style={inlineStyle}>
+<div class={cardStyle} style={variantGradients[variant]}>
   <slot />
 </div>
 
 <script>
-  function handleMouseMove(event: MouseEvent, card: HTMLElement): void {
-    const rect = card.getBoundingClientRect();
-    const x = event.clientX - rect.left;
-    const y = event.clientY - rect.top;
-
-    const centerX = rect.width / 2;
-    const centerY = rect.height / 2;
-
-    const rotateX = ((y - centerY) / centerY) * -10;
-    const rotateY = ((x - centerX) / centerX) * 10;
-
-    card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
-    card.style.boxShadow = `0 30px 50px rgba(0, 0, 0, 0.2), 
-                        ${rotateY / 2}px ${rotateX / 2}px 20px rgba(0, 0, 0, 0.1)`;
-  }
-
-  function resetCard(card: HTMLElement): void {
-    card.style.transform = "perspective(1000px) rotateX(0) rotateY(0)";
-    card.style.boxShadow = "0 10px 30px rgba(0, 0, 0, 0.1)";
-  }
-
+  // Tilt effect logic
   document.addEventListener("DOMContentLoaded", () => {
     const cards = document.querySelectorAll<HTMLElement>(".tilt-card");
     cards.forEach((card) => {
-      card.addEventListener("mousemove", (e: MouseEvent) =>
-        handleMouseMove(e, card),
-      );
-      card.addEventListener("mouseleave", () => resetCard(card));
+      card.addEventListener("mousemove", (e: MouseEvent) => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+
+        // Reduce tilt effect slightly for square cards to prevent distortion
+        const tiltFactor = card.classList.contains("aspect-square") ? 8 : 10;
+        const rotateX = ((y - centerY) / centerY) * -tiltFactor;
+        const rotateY = ((x - centerX) / centerX) * tiltFactor;
+
+        card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+        card.style.boxShadow = `0 30px 50px rgba(0, 0, 0, 0.2), 
+                            ${rotateY / 2}px ${rotateX / 2}px 20px rgba(0, 0, 0, 0.1)`;
+      });
+
+      card.addEventListener("mouseleave", () => {
+        card.style.transform = "perspective(1000px) rotateX(0) rotateY(0)";
+        card.style.boxShadow = "0 10px 30px rgba(0, 0, 0, 0.1)";
+      });
     });
   });
 </script>
@@ -75,6 +80,13 @@ const inlineStyle = `${variantGradients[variant]} min-height: ${minHeight};`;
     display: flex;
     align-items: center;
     justify-content: center;
+  }
+
+  /* Square cards need special handling to maintain aspect ratio */
+  .aspect-square {
+    aspect-ratio: 1 / 1;
+    width: 100%;
+    height: auto;
   }
 
   .glassmorphic-effect {

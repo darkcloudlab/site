@@ -7,16 +7,17 @@ const stars = Array(5).fill("★");
 ---
 
 <section class="stats-section">
-  <div class="content-wrapper">
-    <div class="grid-container">
-      <!-- Regular blue card -->
+  <div class="content-wrapper h-full">
+    <div class="grid-container h-full">
+      <!-- Square blue card -->
       <StatsCard
         title="Mobile Development"
         subtitle="React Native & Flutter specialists"
+        aspectRatio="square"
       />
 
       <!-- Featured stats card in center -->
-      <div class="row-span-2">
+      <div class="row-span-2 featured-card-wrapper">
         <FeaturedStatsCard
           topText="Insert some statistic"
           statistic="100k"
@@ -29,10 +30,15 @@ const stars = Array(5).fill("★");
         title="Create with AI"
         subtitle="Harness Machine learning"
         titleColor="#FF5733"
+        aspectRatio="square"
       />
 
       <!-- Info card -->
-      <StatsCard title="Info" subtitle="Insert some statistic" />
+      <StatsCard
+        title="Info"
+        subtitle="Insert some statistic"
+        aspectRatio="square"
+      />
 
       <!-- Dark card with stacked text -->
       <StatsCard
@@ -41,6 +47,7 @@ const stars = Array(5).fill("★");
         variant="dark"
         textAlign="right"
         subtitleStyle="stacked"
+        aspectRatio="square"
       />
     </div>
   </div>
@@ -69,8 +76,25 @@ const stars = Array(5).fill("★");
   .grid-container {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 1rem;
+    gap: 1.5rem; /* Increased gap for better visual separation of square cards */
     width: 100%;
+  }
+
+  /* Add this for the featured card wrapper */
+  .featured-card-wrapper {
+    height: 100%;
+    display: flex;
+  }
+
+  /* This targets the actual BaseCard inside FeaturedStatsCard */
+  .featured-card-wrapper > :global(*) {
+    width: 100%;
+    height: 100%;
+  }
+
+  /* This ensures the inner content expands fully */
+  .featured-card-wrapper :global(.glassmorphic-effect) {
+    height: 100%;
   }
 
   /* Responsive adjustments */
@@ -83,6 +107,11 @@ const stars = Array(5).fill("★");
   @media (max-width: 768px) {
     .content-wrapper {
       padding: 4rem 1rem;
+    }
+
+    /* On smaller screens, we might want to reduce the gap slightly */
+    .grid-container {
+      gap: 1rem;
     }
   }
 </style>

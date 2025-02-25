@@ -6,6 +6,7 @@ interface Props {
   title: string;
   subtitle: string;
   variant?: "default" | "gradient" | "dark";
+  aspectRatio?: "square" | "rectangle";
   textAlign?: "left" | "center" | "right";
   titleSize?: "normal" | "large" | "xlarge";
   titleColor?: string;
@@ -17,6 +18,7 @@ const {
   title,
   subtitle,
   variant = "default",
+  aspectRatio = "square", // Default to square
   textAlign = "center",
   titleSize = "normal",
   titleColor = "",
@@ -31,10 +33,11 @@ const alignClasses = {
   right: "text-right",
 };
 
-// Title size classes
+// Adjust title sizes based on square format
+// Square cards typically need larger text to fill the space effectively
 const titleSizes = {
-  normal: "text-2xl",
-  large: "text-4xl",
+  normal: aspectRatio === "square" ? "text-3xl" : "text-2xl",
+  large: aspectRatio === "square" ? "text-5xl" : "text-4xl",
   xlarge: "text-6xl",
 };
 
@@ -42,32 +45,43 @@ const titleSizes = {
 const isStacked = subtitleStyle === "stacked";
 ---
 
-<BaseCard variant={variant} className={className}>
+<BaseCard variant={variant} aspectRatio={aspectRatio} className={className}>
   <div
-    class={`flex flex-col gap-2 relative z-10 w-full ${alignClasses[textAlign]}`}
+    class={`flex flex-col gap-3 relative z-10 w-full h-full ${alignClasses[textAlign]}`}
     style="transform: translateZ(20px)"
   >
-    <h3
-      class={`font-bold ${titleSizes[titleSize]}`}
-      style={titleColor ? `color: ${titleColor};` : ""}
-    >
-      {title}
-    </h3>
+    {/* For square cards, we want to center content vertically */}
+    <div class="flex flex-col justify-center h-full">
+      <h3
+        class={`font-bold ${titleSizes[titleSize]} leading-tight`}
+        style={titleColor ? `color: ${titleColor};` : ""}
+      >
+        {title}
+      </h3>
 
-    {
-      isStacked ? (
-        subtitle
-          .split(".")
-          .map((item) => item.trim())
-          .filter(Boolean)
-          .map((line) => (
-            <p class="text-3xl font-bold opacity-90 leading-tight">{line}.</p>
-          ))
-      ) : (
-        <p class="text-lg opacity-80 mt-2">{subtitle}</p>
-      )
-    }
+      {
+        isStacked ? (
+          <div class="mt-2">
+            {subtitle
+              .split(".")
+              .map((item) => item.trim())
+              .filter(Boolean)
+              .map((line) => (
+                <p class="text-3xl font-bold opacity-90 leading-tight">
+                  {line}.
+                </p>
+              ))}
+          </div>
+        ) : (
+          <p
+            class={`opacity-80 mt-2 ${aspectRatio === "square" ? "text-xl" : "text-lg"}`}
+          >
+            {subtitle}
+          </p>
+        )
+      }
 
-    <slot />
+      <slot />
+    </div>
   </div>
 </BaseCard>

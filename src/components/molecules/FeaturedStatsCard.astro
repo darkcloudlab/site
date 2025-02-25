@@ -17,14 +17,14 @@ const {
 } = Astro.props;
 ---
 
-<BaseCard variant="gradient" minHeight="520px" className={className}>
+<BaseCard variant="gradient" aspectRatio="featured" className={className}>
   <div
     class="relative z-10 text-center flex flex-col justify-center h-full w-full"
     style="transform: translateZ(20px)"
   >
     <p class="text-xl opacity-80">{topText}</p>
-    <h2 class="text-6xl font-bold mt-2">{statistic}</h2>
-    <p class="text-xl opacity-80 mt-2">{bottomText}</p>
+    <h2 class="text-6xl font-bold mt-4 mb-4">{statistic}</h2>
+    <p class="text-xl opacity-80">{bottomText}</p>
   </div>
 
   <div
