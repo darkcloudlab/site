@@ -1,0 +1,35 @@
+---
+// molecules/FeaturedStatsCard.astro
+import BaseCard from "../atoms/BaseCard.astro";
+
+interface Props {
+  topText?: string;
+  statistic: string;
+  bottomText?: string;
+  className?: string;
+}
+
+const {
+  topText = "Insert some statistic",
+  statistic = "100k",
+  bottomText = "Insert some statistic name",
+  className = "",
+} = Astro.props;
+---
+
+<BaseCard variant="gradient" minHeight="520px" className={className}>
+  <div
+    class="relative z-10 text-center flex flex-col justify-center h-full w-full"
+    style="transform: translateZ(20px)"
+  >
+    <p class="text-xl opacity-80">{topText}</p>
+    <h2 class="text-6xl font-bold mt-2">{statistic}</h2>
+    <p class="text-xl opacity-80 mt-2">{bottomText}</p>
+  </div>
+
+  <div
+    class="absolute bottom-0 right-0 w-32 h-32 transform translate-x-8 translate-y-8 pointer-events-none"
+  >
+    <div class="w-full h-full bg-black rounded-lg transform -rotate-12"></div>
+  </div>
+</BaseCard>

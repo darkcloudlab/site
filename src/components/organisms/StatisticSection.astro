@@ -1,6 +1,7 @@
 ---
 // organisms/StatisticSection.astro
 import StatsCard from "../molecules/StatsCard.astro";
+import FeaturedStatsCard from "../molecules/FeaturedStatsCard.astro";
 
 const stars = Array(5).fill("★");
 ---
@@ -8,41 +9,38 @@ const stars = Array(5).fill("★");
 <section class="stats-section">
   <div class="content-wrapper">
     <div class="grid-container">
+      <!-- Regular blue card -->
       <StatsCard
         title="Mobile Development"
         subtitle="React Native & Flutter specialists"
       />
 
+      <!-- Featured stats card in center -->
       <div class="row-span-2">
-        <div
-          class="bg-gradient-to-br from-red-500 to-pink-600 text-white rounded-3xl p-6 relative overflow-hidden"
-        >
-          <div class="flex flex-col gap-4">
-            <div>
-              <p class="text-xl opacity-80">Insert some statistic</p>
-              <h2 class="text-6xl font-bold mt-2">100k</h2>
-              <p class="text-xl opacity-80 mt-2">Insert some statistic name</p>
-            </div>
-            <div
-              class="absolute bottom-0 right-0 w-32 h-32 transform translate-x-8 translate-y-8"
-            >
-              <div
-                class="w-full h-full bg-black rounded-lg transform -rotate-12"
-              >
-              </div>
-            </div>
-          </div>
-        </div>
+        <FeaturedStatsCard
+          topText="Insert some statistic"
+          statistic="100k"
+          bottomText="Insert some statistic name"
+        />
       </div>
 
-      <StatsCard title="Create with AI" subtitle="Harness Machine learning" />
+      <!-- Orange text accent card -->
+      <StatsCard
+        title="Create with AI"
+        subtitle="Harness Machine learning"
+        titleColor="#FF5733"
+      />
 
+      <!-- Info card -->
       <StatsCard title="Info" subtitle="Insert some statistic" />
 
+      <!-- Dark card with stacked text -->
       <StatsCard
         title="We Are"
         subtitle="Agile. Focused. Personal."
         variant="dark"
+        textAlign="right"
+        subtitleStyle="stacked"
       />
     </div>
   </div>

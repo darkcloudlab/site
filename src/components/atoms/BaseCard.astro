@@ -1,0 +1,99 @@
+---
+// molecules/BaseCard.astro
+interface Props {
+  variant?: "default" | "gradient" | "dark";
+  className?: string;
+  minHeight?: string;
+}
+
+const {
+  variant = "default",
+  className = "",
+  minHeight = "240px",
+} = Astro.props;
+
+// Variant background gradients
+const variantGradients = {
+  default:
+    "background: linear-gradient(135deg, rgba(37, 99, 235, 0.95) 0%, rgba(37, 99, 235, 0.85) 100%);",
+  gradient:
+    "background: linear-gradient(135deg, rgba(239, 68, 68, 0.95) 0%, rgba(219, 39, 119, 0.85) 100%);",
+  dark: "background: linear-gradient(135deg, rgba(23, 37, 84, 0.95) 0%, rgba(23, 37, 84, 0.85) 100%);",
+};
+
+const cardStyle = `tilt-card glassmorphic-effect p-6 text-white relative overflow-hidden ${className}`;
+const inlineStyle = `${variantGradients[variant]} min-height: ${minHeight};`;
+---
+
+<div class={cardStyle} style={inlineStyle}>
+  <slot />
+</div>
+
+<script>
+  function handleMouseMove(event: MouseEvent, card: HTMLElement): void {
+    const rect = card.getBoundingClientRect();
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
+
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+
+    const rotateX = ((y - centerY) / centerY) * -10;
+    const rotateY = ((x - centerX) / centerX) * 10;
+
+    card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+    card.style.boxShadow = `0 30px 50px rgba(0, 0, 0, 0.2), 
+                        ${rotateY / 2}px ${rotateX / 2}px 20px rgba(0, 0, 0, 0.1)`;
+  }
+
+  function resetCard(card: HTMLElement): void {
+    card.style.transform = "perspective(1000px) rotateX(0) rotateY(0)";
+    card.style.boxShadow = "0 10px 30px rgba(0, 0, 0, 0.1)";
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const cards = document.querySelectorAll<HTMLElement>(".tilt-card");
+    cards.forEach((card) => {
+      card.addEventListener("mousemove", (e: MouseEvent) =>
+        handleMouseMove(e, card),
+      );
+      card.addEventListener("mouseleave", () => resetCard(card));
+    });
+  });
+</script>
+
+<style>
+  .tilt-card {
+    transform-style: preserve-3d;
+    transform: perspective(1000px);
+    transition:
+      transform 0.1s ease-out,
+      box-shadow 0.1s ease-out;
+    will-change: transform, box-shadow;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    border-radius: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .glassmorphic-effect {
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(8px);
+  }
+
+  .glassmorphic-effect::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.1) 0%,
+      rgba(255, 255, 255, 0.05) 100%
+    );
+    pointer-events: none;
+  }
+</style>
