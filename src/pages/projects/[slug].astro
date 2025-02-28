@@ -1,0 +1,155 @@
+---
+import Layout from "../../layouts/Layout.astro";
+
+interface Project {
+  title: string;
+  date: string;
+  type: string;
+}
+
+export function getStaticPaths() {
+  const projects: Project[] = [
+    {
+      title: "Micro SaaS - Get your business connected",
+      date: "01/02/24",
+      type: "Saas",
+    },
+    {
+      title: "Evo - Redesign of the BC Evo App",
+      date: "01/02/24",
+      type: "Client",
+    },
+    {
+      title: "AI Integration - getting your AI online",
+      date: "01/02/24",
+      type: "Research",
+    },
+    {
+      title: "ChatTo",
+      date: "01/02/24",
+      type: "AI (Client)",
+    },
+    {
+      title: "Interview Prep",
+      date: "01/02/24",
+      type: "AI (Client)",
+    },
+  ];
+  return projects.map((project) => ({
+    params: {
+      slug: project.title.toLowerCase().replace(/ /g, '-'),
+    },
+    props: {
+      project,
+    },
+  }));
+}
+
+const { project } = Astro.props;
+---
+
+<Layout title={project.title + " | Dark Cloud Lab"}>
+  <main class="min-h-screen bg-gray-900 text-white">
+    <!-- Background gradient effect -->
+    <div class="absolute inset-0">
+      <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full">
+        <div
+          class="absolute top-40 right-0 w-[800px] h-[800px] rounded-full bg-blue-600/20 blur-3xl"
+        >
+        </div>
+        <div
+          class="absolute top-80 right-40 w-[600px] h-[600px] rounded-full bg-purple-600/20 blur-3xl"
+        >
+        </div>
+      </div>
+    </div>
+
+    <!-- Hero Section with Project Title -->
+    <div class="relative pt-24 pb-12">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h1 class="text-5xl font-bold text-center mb-8">
+          {project.title}
+        </h1>
+        
+        <!-- Project Metadata -->
+        <div class="flex justify-center space-x-8 mb-16">
+          <div class="flex items-center">
+            <span class="text-gray-400 mr-2">Date:</span>
+            <span class="text-xl">{project.date}</span>
+          </div>
+          <div class="flex items-center">
+            <span class="text-gray-400 mr-2">Type:</span>
+            <span class="text-xl">{project.type}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Project Content Sections -->
+    <div class="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pb-24">
+      <!-- Description Section -->
+      <section class="mb-16">
+        <h2 class="text-3xl font-semibold mb-6 border-b border-white/10 pb-2">Description</h2>
+        <div class="prose prose-lg prose-invert">
+          <p>
+            This is a placeholder for the project description. Detailed information about the project's purpose, scope, and goals would go here.
+          </p>
+        </div>
+      </section>
+
+      <!-- Challenges Section -->
+      <section class="mb-16">
+        <h2 class="text-3xl font-semibold mb-6 border-b border-white/10 pb-2">Challenges</h2>
+        <div class="prose prose-lg prose-invert">
+          <p>
+            This is a placeholder for the project challenges. The obstacles, constraints, and difficulties faced during the project would be described here.
+          </p>
+        </div>
+      </section>
+
+      <!-- Solutions Section -->
+      <section class="mb-16">
+        <h2 class="text-3xl font-semibold mb-6 border-b border-white/10 pb-2">Solutions</h2>
+        <div class="prose prose-lg prose-invert">
+          <p>
+            This is a placeholder for the project solutions. The approaches, technologies, and methodologies used to overcome the challenges would be explained here.
+          </p>
+        </div>
+      </section>
+
+      <!-- Outcomes Section -->
+      <section class="mb-16">
+        <h2 class="text-3xl font-semibold mb-6 border-b border-white/10 pb-2">Outcomes</h2>
+        <div class="prose prose-lg prose-invert">
+          <p>
+            This is a placeholder for the project outcomes. The results, achievements, and impact of the project would be detailed here.
+          </p>
+        </div>
+      </section>
+
+      <!-- Back to Projects Link -->
+      <div class="flex justify-center mt-16">
+        <a
+          href="/"
+          class="px-6 py-3 bg-blue-600 hover:bg-blue-700 transition-colors text-white rounded-md text-lg font-medium"
+        >
+          Back to Projects
+        </a>
+      </div>
+    </div>
+  </main>
+</Layout>
+
+<style>
+  .prose {
+    color: #f3f4f6;
+  }
+  .prose p {
+    margin-bottom: 1rem;
+  }
+  main {
+    position: relative;
+    overflow-x: hidden;
+  }
+</style>
+
