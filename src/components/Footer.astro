@@ -1,0 +1,80 @@
+---
+type Props = {
+	brandName: string;
+	links: ReadonlyArray<{ label: string; href: string }>;
+};
+const { brandName, links } = Astro.props;
+const year = new Date().getFullYear();
+---
+
+<footer class="footer">
+	<div class="container">
+		<div class="top">
+			<div>
+				<div class="brand">{brandName}</div>
+				<p class="muted note">
+					Built for the overcast: calm surfaces, clear outcomes.
+				</p>
+			</div>
+			<nav class="links" aria-label="Footer">
+				{links.map((l) => (
+					<a class="link" href={l.href}>{l.label}</a>
+				))}
+			</nav>
+		</div>
+		<div class="bottom muted">
+			<span>© {year} {brandName}. All rights reserved.</span>
+		</div>
+	</div>
+</footer>
+
+<style>
+	.footer {
+		border-top: 1px solid rgba(var(--fog-2), 0.16);
+		padding: 2.5rem 0 2rem;
+		background: linear-gradient(180deg, rgba(var(--bg-0), 0), rgba(var(--bg-0), 0.6));
+	}
+	.top {
+		display: grid;
+		grid-template-columns: 1fr;
+		gap: 1.5rem;
+	}
+	.brand {
+		font-weight: 650;
+		letter-spacing: -0.02em;
+	}
+	.note {
+		margin: 0.5rem 0 0;
+		max-width: 48ch;
+	}
+	.links {
+		display: flex;
+		gap: 1rem;
+		flex-wrap: wrap;
+		align-items: center;
+		justify-content: flex-start;
+	}
+	.link {
+		color: rgba(var(--fog-1), 0.9);
+		border-bottom: 1px solid transparent;
+		padding-bottom: 0.2rem;
+	}
+	.link:hover {
+		color: rgba(var(--fog-0), 0.92);
+		border-bottom-color: rgba(var(--fog-2), 0.3);
+	}
+	.bottom {
+		margin-top: 1.75rem;
+		font-size: 0.95rem;
+	}
+	@media (min-width: 760px) {
+		.top {
+			grid-template-columns: 1.3fr 0.7fr;
+			align-items: start;
+		}
+		.links {
+			justify-content: flex-end;
+		}
+	}
+</style>
+

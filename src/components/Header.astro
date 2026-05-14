@@ -1,0 +1,112 @@
+---
+type Props = {
+	brand: {
+		name: string;
+		tagline?: string;
+	};
+	links: ReadonlyArray<{ label: string; href: string }>;
+	cta: { label: string; href: string };
+};
+
+const { brand, links, cta } = Astro.props;
+---
+
+<header class="header">
+	<div class="container inner">
+		<a class="brand" href="/" aria-label={brand.name}>
+			<span class="mark" aria-hidden="true"></span>
+			<span class="name">{brand.name}</span>
+		</a>
+		<nav class="nav" aria-label="Primary">
+			{links.map((l) => (
+				<a class="navLink" href={l.href}>{l.label}</a>
+			))}
+		</nav>
+		<div class="actions">
+			<a class="btn primary" href={cta.href}>{cta.label}</a>
+		</div>
+	</div>
+</header>
+
+<style>
+	.header {
+		position: sticky;
+		top: 0;
+		z-index: 50;
+		border-bottom: 1px solid rgba(var(--fog-2), 0.16);
+		background: linear-gradient(
+			180deg,
+			rgba(var(--bg-0), 0.85),
+			rgba(var(--bg-0), 0.55)
+		);
+		backdrop-filter: blur(14px);
+		-webkit-backdrop-filter: blur(14px);
+	}
+	.inner {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		padding: 0.9rem 0;
+		gap: 1rem;
+	}
+	.brand {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.7rem;
+		min-width: max-content;
+	}
+	.mark {
+		width: 34px;
+		height: 22px;
+		border-radius: 999px;
+		background: var(--metal);
+		box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+		position: relative;
+		overflow: hidden;
+	}
+	.mark::after {
+		content: '';
+		position: absolute;
+		inset: -40% -20%;
+		transform: rotate(20deg);
+		background: linear-gradient(
+			90deg,
+			transparent,
+			rgba(var(--fog-0), 0.35),
+			transparent
+		);
+		opacity: 0.55;
+	}
+	.name {
+		font-weight: 650;
+		letter-spacing: -0.02em;
+		color: rgba(var(--fog-0), 0.92);
+	}
+	.nav {
+		display: none;
+		gap: 1.05rem;
+		align-items: center;
+	}
+	.navLink {
+		color: rgba(var(--fog-1), 0.9);
+		font-size: 0.95rem;
+		padding: 0.35rem 0.25rem;
+		border-radius: 10px;
+		transition: color 220ms var(--ease-out), background-color 220ms var(--ease-out);
+	}
+	.navLink:hover {
+		color: rgba(var(--fog-0), 0.92);
+		background: rgba(var(--bg-2), 0.22);
+	}
+	.actions {
+		display: flex;
+		align-items: center;
+		gap: 0.75rem;
+	}
+	@media (min-width: 760px) {
+		.nav {
+			display: inline-flex;
+		}
+	}
+</style>
+
