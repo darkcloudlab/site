@@ -5,6 +5,8 @@ import Footer from '../components/Footer.astro';
 import Section from '../components/Section.astro';
 import CapabilityGrid from '../components/CapabilityGrid.astro';
 import { site } from '../content/site';
+import { projects } from '../content/projects';
+import ProjectsTable from '../components/ProjectsTable.astro';
 ---
 
 <Layout title={`${site.name} — ${site.hero.heading}`} description={site.hero.subheading}>
@@ -42,14 +44,37 @@ import { site } from '../content/site';
 
 				<div class="heroArt" aria-hidden="true">
 					<div class="plate">
-						<div class="shape a"></div>
-						<div class="shape b"></div>
-						<div class="shape c"></div>
+						<img class="heroLogo" src="/dcl-logo.svg" alt="" loading="eager" decoding="async" />
 					</div>
-					<div class="caption muted">Replace this mark with your real logo asset in `public/` when ready.</div>
+					<div class="caption muted">PNW overcast palette + metallic mark.</div>
 				</div>
 			</div>
 		</section>
+
+		<Section
+			id="about"
+			eyebrow={site.about.eyebrow}
+			title={site.about.title}
+			lead={site.about.lead}
+		>
+			<div class="aboutGrid">
+				<article class="card aboutCard">
+					<h3 class="aboutTitle">Beyond the dark cloud</h3>
+					<p class="muted aboutBody">
+						Our brightest purpose is creating solutions that genuinely improve lives.
+						Every interface we design and every feature we ship is guided by a simple question:
+						How will this make someone’s day-to-day better?
+					</p>
+				</article>
+				<article class="card aboutCard">
+					<h3 class="aboutTitle">Intelligent solutions</h3>
+					<p class="muted aboutBody">
+						We build products where AI meets usability — from mobile applications to scalable SaaS.
+						The goal is always the same: ship something people can trust, understand, and keep using.
+					</p>
+				</article>
+			</div>
+		</Section>
 
 		<Section
 			id="approach"
@@ -78,6 +103,15 @@ import { site } from '../content/site';
 			lead={site.capabilities.lead}
 		>
 			<CapabilityGrid items={site.capabilities.items} />
+		</Section>
+
+		<Section
+			id="projects"
+			eyebrow="Projects"
+			title="Selected work"
+			lead="A small sampling of what we’ve shipped and explored. (These are placeholders—next step is adding real summaries and screenshots.)"
+		>
+			<ProjectsTable projects={projects} />
 		</Section>
 
 		<Section
@@ -216,39 +250,35 @@ import { site } from '../content/site';
 		);
 		transform: rotate(-12deg);
 	}
-	.shape {
+	.heroLogo {
 		position: absolute;
+		inset: 0;
+		margin: auto;
+		width: min(260px, 70%);
+		height: auto;
 		opacity: 0.95;
-		filter: drop-shadow(0 16px 40px rgba(0, 0, 0, 0.45));
-		background: var(--metal);
-	}
-	.shape.a {
-		width: 168px;
-		height: 168px;
-		border-radius: 999px;
-		left: 44%;
-		top: 28%;
-		background: linear-gradient(135deg, rgba(var(--fog-0), 0.98), rgba(var(--fog-2), 0.5));
-	}
-	.shape.b {
-		width: 180px;
-		height: 180px;
-		border-radius: 28px 999px 999px 28px;
-		left: 22%;
-		top: 28%;
-		background: linear-gradient(135deg, rgba(var(--fog-2), 0.55), rgba(var(--fog-0), 0.85));
-	}
-	.shape.c {
-		width: 180px;
-		height: 190px;
-		left: 62%;
-		top: 22%;
-		border-radius: 22px;
-		clip-path: polygon(0 0, 70% 0, 100% 100%, 0 100%);
-		background: linear-gradient(135deg, rgba(var(--fog-0), 0.86), rgba(var(--fog-2), 0.42));
+		filter: drop-shadow(0 24px 60px rgba(0, 0, 0, 0.55));
 	}
 	.caption {
 		font-size: 0.9rem;
+	}
+
+	.aboutGrid {
+		display: grid;
+		grid-template-columns: 1fr;
+		gap: 1rem;
+	}
+	.aboutCard {
+		padding: 1.1rem 1.15rem;
+	}
+	.aboutTitle {
+		margin: 0;
+		font-size: 1.05rem;
+		letter-spacing: -0.02em;
+	}
+	.aboutBody {
+		margin: 0.5rem 0 0;
+		line-height: 1.65;
 	}
 
 	.steps {
@@ -363,6 +393,9 @@ import { site } from '../content/site';
 		}
 		.fieldFull {
 			grid-column: 1 / -1;
+		}
+		.aboutGrid {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
 		}
 	}
 </style>

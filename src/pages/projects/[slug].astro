@@ -1,0 +1,114 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import { site } from '../../content/site';
+import { projects } from '../../content/projects';
+
+export function getStaticPaths() {
+	return projects.map((project) => ({
+		params: { slug: project.slug },
+		props: { project },
+	}));
+}
+
+const { project } = Astro.props;
+---
+
+<Layout title={`${project.title} — ${site.name}`}>
+	<Header
+		brand={{ name: site.name, tagline: site.tagline }}
+		links={[
+			{ label: 'Approach', href: '/#approach' },
+			{ label: 'Services', href: '/#services' },
+			{ label: 'Contact', href: '/#contact' },
+		]}
+		cta={{ label: 'Talk to us', href: '/#contact' }}
+	/>
+
+	<main class="container page">
+		<div class="crumb muted">
+			<a href="/" class="crumbLink">← Back</a>
+		</div>
+
+		<header class="header">
+			<h1 class="title">{project.title}</h1>
+			<div class="meta">
+				<span class="pill">{project.type}</span>
+				<span class="pill">{project.date}</span>
+			</div>
+		</header>
+
+		<section class="card block">
+			<h2 class="h2">Description</h2>
+			<p class="muted">
+				Placeholder: add a short narrative for what this project is, who it’s for, and what success looks like.
+			</p>
+		</section>
+		<section class="card block">
+			<h2 class="h2">Challenges</h2>
+			<p class="muted">Placeholder: constraints, edge cases, and what made it hard.</p>
+		</section>
+		<section class="card block">
+			<h2 class="h2">Solution</h2>
+			<p class="muted">Placeholder: approach, architecture, and implementation highlights.</p>
+		</section>
+		<section class="card block">
+			<h2 class="h2">Outcome</h2>
+			<p class="muted">Placeholder: what shipped and what improved (metrics if available).</p>
+		</section>
+
+		<div class="spacer"></div>
+	</main>
+
+	<Footer brandName={site.name} links={site.footer.links} />
+</Layout>
+
+<style>
+	.page {
+		padding: 2.25rem 0 4rem;
+	}
+	.crumb {
+		font-size: 0.95rem;
+		margin: 0.5rem 0 1.35rem;
+	}
+	.crumbLink {
+		color: rgba(var(--fog-1), 0.9);
+	}
+	.crumbLink:hover {
+		color: rgba(var(--fog-0), 0.92);
+	}
+	.header {
+		padding: 1.25rem 0 1.75rem;
+	}
+	.title {
+		margin: 0;
+		font-size: clamp(2rem, 4.2vw, 3rem);
+		letter-spacing: -0.04em;
+		line-height: 1.05;
+	}
+	.meta {
+		display: flex;
+		gap: 0.6rem;
+		margin-top: 0.85rem;
+		flex-wrap: wrap;
+	}
+	.block {
+		padding: 1.1rem 1.15rem;
+		margin-top: 1rem;
+	}
+	.h2 {
+		margin: 0;
+		font-size: 1.1rem;
+		letter-spacing: -0.02em;
+	}
+	.block p {
+		margin: 0.55rem 0 0;
+		line-height: 1.65;
+		max-width: 75ch;
+	}
+	.spacer {
+		height: 2rem;
+	}
+</style>
+

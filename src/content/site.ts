@@ -6,7 +6,7 @@ export type Capability = {
 };
 
 export const site = {
-	name: 'DarkCloud Lab',
+	name: 'DarkCloudLab',
 	tagline: 'Cloud systems built for overcast reality.',
 	hero: {
 		heading: 'Quietly powerful cloud and AI systems.',
@@ -17,7 +17,13 @@ export const site = {
 	},
 	proof: {
 		kicker: 'Built for teams who need clarity in complex environments.',
-		items: ['Architecture', 'Security', 'Migrations', 'Optimization', 'Applied AI'],
+		items: ['AI', 'Mobile', 'SaaS', 'Product', 'Design'],
+	},
+	about: {
+		eyebrow: 'Who we are',
+		title: 'A small team that ships.',
+		lead:
+			'Founded by two builders focused on the intersection of artificial intelligence, mobile applications, and intuitive design. We aim to create software that doesn’t just work — it delights.',
 	},
 	approach: {
 		eyebrow: 'Approach',
@@ -41,44 +47,37 @@ export const site = {
 	},
 	capabilities: {
 		eyebrow: 'Services',
-		title: 'Areas of focus',
+		title: 'What we do',
 		lead:
-			'We go deep where reliability matters most. Pick a starting point and we’ll help you move from ambiguity to a plan you can execute.',
+			'We build end-to-end: from product strategy and design to engineering and AI. These are the lanes we’re best in — and we can tailor them to your context.',
 		items: [
 			{
+				verb: 'Design',
+				title: 'Product & UX systems',
+				description:
+					'Design language, interaction patterns, and UX that stays calm under complexity.',
+				bullets: ['Design systems', 'Prototyping', 'Information architecture'],
+			},
+			{
 				verb: 'Build',
-				title: 'Modern cloud foundations',
+				title: 'Mobile & web apps',
 				description:
-					'Design and implement nimble, scalable systems with clear ownership and clean boundaries.',
-				bullets: ['Reference architectures', 'IaC & automation', 'Observability by default'],
+					'High-quality client experiences with the engineering foundation to scale.',
+				bullets: ['React Native / Flutter', 'Web apps', 'API integrations'],
 			},
 			{
-				verb: 'Migrate',
-				title: 'Practical migrations',
+				verb: 'Ship',
+				title: 'SaaS foundations',
 				description:
-					'Move safely from legacy stacks to cloud platforms with minimal disruption.',
-				bullets: ['Assessment & plan', 'Cutover strategy', 'Data migration'],
+					'Pragmatic SaaS architecture with clean ownership, analytics, and operational clarity.',
+				bullets: ['Auth + billing', 'Observability', 'Reliable deployments'],
 			},
 			{
-				verb: 'Maintain',
-				title: 'Operations you can trust',
-				description:
-					'Keep systems secure, compliant, and resilient so your team can focus on product.',
-				bullets: ['Security hardening', 'SLOs & on-call', 'Incident playbooks'],
-			},
-			{
-				verb: 'Optimize',
-				title: 'Performance & cost',
-				description:
-					'Balance capability with cost by tuning compute, storage, and delivery patterns.',
-				bullets: ['FinOps basics', 'Caching & scaling', 'Bottleneck removal'],
-			},
-			{
-				verb: 'Innovate',
+				verb: 'Integrate',
 				title: 'Applied AI',
 				description:
-					'Turn ideas into useful internal tools with guardrails, evals, and governance.',
-				bullets: ['Workflow copilots', 'RAG foundations', 'Safety & evaluation'],
+					'AI features that are useful in the real world: fast iterations, guardrails, and measurable quality.',
+				bullets: ['LLM integration', 'RAG where it fits', 'Evaluation & safety'],
 			},
 		] satisfies Capability[],
 	},
