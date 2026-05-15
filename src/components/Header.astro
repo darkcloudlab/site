@@ -68,25 +68,27 @@ const { brand, links, cta } = Astro.props;
 		width: 34px;
 		height: 22px;
 		border-radius: 10px;
-		background: var(--metal);
-		box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+		background: transparent;
+		box-shadow: none;
 		position: relative;
-		overflow: hidden;
+		overflow: visible;
 		display: grid;
 		place-items: center;
 	}
-	.mark.fallback::after,
 	.mark::after {
+		content: none;
+	}
+	.mark.fallback {
+		background: var(--metal);
+		box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+		overflow: hidden;
+	}
+	.mark.fallback::after {
 		content: '';
 		position: absolute;
 		inset: -40% -20%;
 		transform: rotate(20deg);
-		background: linear-gradient(
-			90deg,
-			transparent,
-			rgba(var(--fog-0), 0.35),
-			transparent
-		);
+		background: linear-gradient(90deg, transparent, rgba(var(--fog-0), 0.35), transparent);
 		opacity: 0.55;
 	}
 	.logo {
