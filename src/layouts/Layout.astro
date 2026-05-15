@@ -26,17 +26,18 @@ const { title, description } = Astro.props;
 		color-scheme: dark;
 
 		/* PNW overcast palette */
-		--bg-0: 8 12 16; /* near-black */
-		--bg-1: 12 16 22; /* graphite */
-		--bg-2: 18 24 33; /* slate */
+		/* Use comma-separated channels so rgba(var(--x), a) is valid everywhere. */
+		--bg-0: 8, 12, 16; /* near-black */
+		--bg-1: 12, 16, 22; /* graphite */
+		--bg-2: 18, 24, 33; /* slate */
 
-		--fog-0: 232 238 244; /* bright fog */
-		--fog-1: 193 204 214; /* mist */
-		--fog-2: 140 155 170; /* steel */
+		--fog-0: 232, 238, 244; /* bright fog */
+		--fog-1: 193, 204, 214; /* mist */
+		--fog-2: 140, 155, 170; /* steel */
 
 		/* Single accent, “rainy blue” */
-		--accent-0: 122 166 194;
-		--accent-1: 168 206 230;
+		--accent-0: 122, 166, 194;
+		--accent-1: 168, 206, 230;
 
 		/* Sizing & typography */
 		--container: 1120px;
@@ -188,7 +189,7 @@ const { title, description } = Astro.props;
 	.btn.primary {
 		border-color: rgba(var(--accent-1), 0.28);
 		background: var(--accent);
-		color: rgb(8 12 16);
+		color: rgb(8, 12, 16);
 		box-shadow: 0 18px 56px rgba(0, 0, 0, 0.45);
 	}
 
