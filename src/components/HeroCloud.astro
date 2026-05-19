@@ -1,0 +1,330 @@
+---
+// Interactive “cloud” mesh (ported from prior dev hero).
+// Renders a draggable wavy grid using Three.js + GSAP.
+---
+
+<div class="wrap">
+	<canvas id="hero-cloud-canvas" class="canvas"></canvas>
+</div>
+
+<style>
+	.wrap {
+		width: 100%;
+		height: 100%;
+		min-height: 310px;
+		border-radius: var(--radius-lg);
+		background: linear-gradient(180deg, rgba(var(--bg-2), 0.45), rgba(var(--bg-1), 0.12));
+		border: 1px solid rgba(var(--fog-2), 0.18);
+		box-shadow: var(--shadow-md);
+		position: relative;
+		overflow: hidden;
+	}
+	.wrap::before {
+		content: '';
+		position: absolute;
+		inset: -40% -25%;
+		background: radial-gradient(closest-side, rgba(var(--fog-0), 0.12), transparent 65%);
+		transform: rotate(-12deg);
+		pointer-events: none;
+	}
+	.canvas {
+		position: absolute;
+		inset: 0;
+		width: 100%;
+		height: 100%;
+		display: block;
+	}
+	@media (prefers-reduced-motion: reduce) {
+		.canvas {
+			display: none;
+		}
+	}
+</style>
+
+<script>
+	import * as THREE from 'three';
+	import { gsap } from 'gsap';
+
+	class WavyMesh {
+		private scene: THREE.Scene;
+		private camera: THREE.PerspectiveCamera;
+		private renderer: THREE.WebGLRenderer;
+		private geometry!: THREE.BufferGeometry;
+		private material!: THREE.LineBasicMaterial;
+		private mesh!: THREE.LineSegments;
+		private mouse: THREE.Vector2;
+		private previousMouse: THREE.Vector2;
+		private originalPositions!: Float32Array;
+		private isDragging: boolean;
+		private isPointerOver: boolean;
+		private resizeObserver!: ResizeObserver;
+		private activePointerId: number | null;
+		private containerScale: number;
+
+		constructor(canvas: HTMLCanvasElement) {
+			this.scene = new THREE.Scene();
+			this.scene.background = null;
+
+			this.camera = new THREE.PerspectiveCamera(45, 1, 0.1, 1000);
+			this.camera.position.set(0, -90, 90);
+			this.camera.lookAt(0, 0, 0);
+
+			this.renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+
+			this.mouse = new THREE.Vector2(0, 0);
+			this.previousMouse = new THREE.Vector2(0, 0);
+			this.isDragging = false;
+			this.isPointerOver = false;
+			this.activePointerId = null;
+			this.containerScale = 1;
+
+			this.setupResizeObserver(canvas);
+			this.createMesh();
+			this.setupEventListeners(canvas);
+			this.updateSize();
+			this.render();
+		}
+
+		private createMesh(): void {
+			const container = this.renderer.domElement.parentElement;
+			const rect = container?.getBoundingClientRect();
+			const containerWidth = rect?.width || window.innerWidth;
+
+			const baseWidth = 60;
+			const baseHeight = 80;
+			const maxWidth = 1024;
+
+			let scale = 1;
+			if (containerWidth < maxWidth) {
+				scale = Math.max(0.5, containerWidth / maxWidth);
+			}
+			this.containerScale = scale;
+
+			const width = baseWidth * scale;
+			const height = baseHeight * scale;
+
+			const gridX = 20;
+			const gridY = Math.floor(20 * (height / width));
+
+			const vertices: number[] = [];
+			const indices: number[] = [];
+
+			for (let i = 0; i < gridX; i++) {
+				for (let j = 0; j < gridY; j++) {
+					const u = (i / (gridX - 1) - 0.5) * width;
+					const v = (j / (gridY - 1) - 0.5) * height;
+
+					const fx = 0.02 / scale;
+					const fy = 0.03 / scale;
+
+					const z1 = Math.sin(u * fx * Math.PI + v * fy * Math.PI) * 12 * scale;
+					const z2 = Math.cos(v * fy * Math.PI - u * fx * Math.PI) * 8 * scale;
+					const z3 = Math.sin((u + v) * fx * 0.5 * Math.PI) * 4 * scale;
+
+					vertices.push(u, v, (z1 + z2 + z3) * 0.4);
+				}
+			}
+
+			for (let i = 0; i < gridX; i++) {
+				for (let j = 0; j < gridY; j++) {
+					const index = i * gridY + j;
+					if (j < gridY - 1) indices.push(index, index + 1);
+					if (i < gridX - 1) indices.push(index, index + gridY);
+				}
+			}
+
+			if (this.geometry) this.geometry.dispose();
+			if (this.material) this.material.dispose();
+
+			this.geometry = new THREE.BufferGeometry();
+			this.geometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
+			this.geometry.setIndex(indices);
+			this.originalPositions = new Float32Array(vertices);
+
+			this.material = new THREE.LineBasicMaterial({
+				color: 0x9aa3ad,
+				linewidth: 1,
+				opacity: 0.75,
+				transparent: true,
+			});
+
+			if (this.mesh) this.scene.remove(this.mesh);
+			this.mesh = new THREE.LineSegments(this.geometry, this.material);
+			this.mesh.rotation.x = -Math.PI * 0.18;
+			this.scene.add(this.mesh);
+		}
+
+		private setupResizeObserver(canvas: HTMLCanvasElement): void {
+			this.resizeObserver = new ResizeObserver(() => {
+				this.updateSize();
+				this.createMesh();
+			});
+			const container = canvas.parentElement;
+			if (container) this.resizeObserver.observe(container);
+		}
+
+		private updateSize(): void {
+			const container = this.renderer.domElement.parentElement;
+			if (!container) return;
+			const rect = container.getBoundingClientRect();
+			this.renderer.setSize(rect.width, rect.height, false);
+			this.camera.aspect = rect.width / rect.height;
+			this.camera.updateProjectionMatrix();
+			this.render();
+		}
+
+		private setupEventListeners(canvas: HTMLCanvasElement): void {
+			canvas.style.cursor = 'grab';
+
+			canvas.addEventListener('pointerenter', () => {
+				this.isPointerOver = true;
+				if (!this.isDragging) canvas.style.cursor = 'grab';
+			});
+
+			canvas.addEventListener('pointerleave', () => {
+				this.isPointerOver = false;
+				this.isDragging = false;
+				this.activePointerId = null;
+				canvas.style.cursor = 'default';
+				this.resetMesh();
+			});
+
+			canvas.addEventListener('pointerdown', (event) => this.onPointerDown(event));
+			canvas.addEventListener('pointerup', (event) => this.onPointerUp(event));
+			canvas.addEventListener('pointercancel', (event) => this.onPointerUp(event));
+			canvas.addEventListener('pointermove', (event) => this.onPointerMove(event));
+		}
+
+		private onPointerDown(event: PointerEvent): void {
+			this.isDragging = true;
+			this.activePointerId = event.pointerId;
+			(event.currentTarget as HTMLCanvasElement).setPointerCapture(event.pointerId);
+			(event.currentTarget as HTMLElement).style.cursor = 'grabbing';
+			this.updatePointerPosition(event);
+			this.previousMouse.copy(this.mouse);
+		}
+
+		private onPointerUp(event: PointerEvent): void {
+			if (this.activePointerId !== event.pointerId) return;
+			this.isDragging = false;
+			this.activePointerId = null;
+			(event.currentTarget as HTMLElement).style.cursor = 'grab';
+		}
+
+		private updatePointerPosition(event: PointerEvent): void {
+			const rect = (event.currentTarget as HTMLElement).getBoundingClientRect();
+			this.mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+			this.mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+		}
+
+		private onPointerMove(event: PointerEvent): void {
+			if (this.activePointerId !== null && this.activePointerId !== event.pointerId) return;
+			this.updatePointerPosition(event);
+			if (this.isDragging) {
+				(event.currentTarget as HTMLElement).style.cursor = 'grabbing';
+				this.updateMesh(true);
+			} else if (this.isPointerOver) {
+				this.updateMesh(false);
+			}
+			this.previousMouse.copy(this.mouse);
+		}
+
+		private resetMesh(): void {
+			const positions = this.geometry.attributes.position.array as Float32Array;
+			const animationTarget: Record<string, number> = {};
+			for (let i = 0; i < positions.length; i++) {
+				animationTarget[String(i)] = this.originalPositions[i]!;
+			}
+			gsap.to(positions, {
+				duration: 0.8,
+				...animationTarget,
+				ease: 'elastic.out(1, 0.3)',
+				onUpdate: () => {
+					this.geometry.attributes.position.needsUpdate = true;
+					this.render();
+				},
+			});
+		}
+
+		private updateMesh(isDragging: boolean): void {
+			const positions = this.geometry.attributes.position.array as Float32Array;
+
+			// Keep interaction feel consistent when the mesh is scaled down.
+			const scale = this.containerScale || 1;
+			const mouseWorld = new THREE.Vector3(this.mouse.x * 60 * scale, this.mouse.y * 40 * scale, 0);
+			mouseWorld.applyAxisAngle(new THREE.Vector3(1, 0, 0), -Math.PI * 0.18);
+
+			const mouseDelta = isDragging
+				? new THREE.Vector2(this.mouse.x - this.previousMouse.x, this.mouse.y - this.previousMouse.y)
+				: new THREE.Vector2(0, 0);
+
+			for (let i = 0; i < positions.length; i += 3) {
+				const vertexPosition = new THREE.Vector3(positions[i]!, positions[i + 1]!, positions[i + 2]!);
+				const distance = mouseWorld.distanceTo(vertexPosition);
+
+				const maxDistance = (isDragging ? 35 : 25) * scale;
+				let influence = Math.max(0, 1 - distance / maxDistance);
+				if (isDragging) influence = Math.pow(influence, 1.5);
+
+				if (influence > 0) {
+					const direction = vertexPosition.sub(mouseWorld).normalize();
+					const targetPosition = new THREE.Vector3(
+						this.originalPositions[i]!,
+						this.originalPositions[i + 1]!,
+						this.originalPositions[i + 2]!,
+					);
+
+					const stretchAmount = isDragging
+						? (15 +
+								Math.sqrt(mouseDelta.x * mouseDelta.x + mouseDelta.y * mouseDelta.y) * 20) *
+							scale
+						: 3 * scale;
+
+					targetPosition.add(direction.multiplyScalar(influence * stretchAmount));
+
+					const animationTarget: Record<string, number> = {
+						[String(i)]: targetPosition.x,
+						[String(i + 1)]: targetPosition.y,
+						[String(i + 2)]: targetPosition.z,
+					};
+
+					gsap.to(positions, {
+						duration: isDragging ? 0.15 : 0.3,
+						...animationTarget,
+						ease: isDragging ? 'power2.out' : 'power1.out',
+						onUpdate: () => {
+							this.geometry.attributes.position.needsUpdate = true;
+							this.render();
+						},
+					});
+				}
+			}
+		}
+
+		private render(): void {
+			this.renderer.render(this.scene, this.camera);
+		}
+
+		public cleanup(): void {
+			if (this.resizeObserver) this.resizeObserver.disconnect();
+			if (this.geometry) this.geometry.dispose();
+			if (this.material) this.material.dispose();
+			if (this.mesh) this.scene.remove(this.mesh);
+		}
+	}
+
+	const canvas = document.querySelector('#hero-cloud-canvas');
+	if (canvas instanceof HTMLCanvasElement) {
+		if (window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches) {
+			// No-op for reduced motion.
+		} else {
+			// Avoid double-init during HMR.
+			// @ts-expect-error attach instance to window
+			if (!window.__dclHeroCloud) {
+				// @ts-expect-error attach instance to window
+				window.__dclHeroCloud = new WavyMesh(canvas);
+			}
+		}
+	}
+</script>
+
