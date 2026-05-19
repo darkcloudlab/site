@@ -63,7 +63,7 @@ export const site = {
 				tag: 'Automation',
 				title: 'AI-native bespoke automation flows',
 				description:
-					'Bespoke automation that connects your systems and moves work forward with approvals, auditability, and measurable quality.',
+					'Purpose-built automation that connects your systems and moves work forward with approvals, auditability, and measurable quality.',
 				bullets: ['Approvals + guardrails', 'Cross-tool integrations', 'Evaluation and monitoring'],
 				cta: { label: 'Talk through a workflow →', href: '#contact' },
 			},
