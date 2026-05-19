@@ -63,16 +63,16 @@ export const site = {
 				tag: 'Automation',
 				title: 'AI-native bespoke automation flows',
 				description:
-					'Purpose-built automations that connect your systems and move work forward with human-in-the-loop controls, auditability, and measurable quality.',
-				bullets: ['Approvals + guardrails', 'Integrations across tools', 'Evaluation and monitoring'],
+					'Bespoke automation that connects your systems and moves work forward with approvals, auditability, and measurable quality.',
+				bullets: ['Approvals + guardrails', 'Cross-tool integrations', 'Evaluation and monitoring'],
 				cta: { label: 'Talk through a workflow →', href: '#contact' },
 			},
 			{
 				tag: 'Internal tools',
 				title: 'Enterprise software, designed around your workflows',
 				description:
-					'We design, build, host, and maintain bespoke internal tools so your team can move faster without sacrificing security or clarity.',
-				bullets: ['Role-based access', 'Operational dashboards', 'Owned business logic'],
+					'We design and build internal tools that fit your team, then keep them running: reliable hosting, monitoring, and ongoing iteration.',
+				bullets: ['Role-based access', 'Operational dashboards', 'Maintenance + iteration'],
 				cta: { label: 'Explore what we can build →', href: '#contact' },
 			},
 		] satisfies EngagementMode[],
@@ -103,13 +103,6 @@ export const site = {
 				description:
 					'Pragmatic SaaS architecture with clean ownership, analytics, and operational clarity.',
 				bullets: ['Auth + billing', 'Observability', 'Reliable deployments'],
-			},
-			{
-				verb: 'Integrate',
-				title: 'Applied AI',
-				description:
-					'AI features that are useful in the real world: fast iterations, guardrails, and measurable quality.',
-				bullets: ['LLM integration', 'Automation flows', 'Evaluation & safety'],
 			},
 		] satisfies Capability[],
 	},
