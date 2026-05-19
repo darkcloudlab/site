@@ -5,6 +5,14 @@ export type Capability = {
 	bullets: string[];
 };
 
+export type EngagementMode = {
+	tag: string;
+	title: string;
+	description: string;
+	bullets: string[];
+	cta: { label: string; href: string };
+};
+
 export const site = {
 	name: 'DarkCloudLab',
 	tagline: 'Cloud systems built for overcast reality.',
@@ -45,6 +53,30 @@ export const site = {
 			},
 		],
 	},
+	engagement: {
+		eyebrow: 'Offerings',
+		title: 'AI-native automation and bespoke internal tools.',
+		lead:
+			'Two ways we typically help: automate the work that slows teams down, or build enterprise-grade internal tools designed around your workflows.',
+		modes: [
+			{
+				tag: 'Automation',
+				title: 'AI-native bespoke automation flows',
+				description:
+					'Purpose-built automations that connect your systems and move work forward with human-in-the-loop controls, auditability, and measurable quality.',
+				bullets: ['Approvals + guardrails', 'Integrations across tools', 'Evaluation and monitoring'],
+				cta: { label: 'Talk through a workflow →', href: '#contact' },
+			},
+			{
+				tag: 'Internal tools',
+				title: 'Enterprise software, designed around your workflows',
+				description:
+					'We design, build, host, and maintain bespoke internal tools so your team can move faster without sacrificing security or clarity.',
+				bullets: ['Role-based access', 'Operational dashboards', 'Owned business logic'],
+				cta: { label: 'Explore what we can build →', href: '#contact' },
+			},
+		] satisfies EngagementMode[],
+	},
 	capabilities: {
 		eyebrow: 'Services',
 		title: 'What we do',
@@ -77,7 +109,7 @@ export const site = {
 				title: 'Applied AI',
 				description:
 					'AI features that are useful in the real world: fast iterations, guardrails, and measurable quality.',
-				bullets: ['LLM integration', 'RAG where it fits', 'Evaluation & safety'],
+				bullets: ['LLM integration', 'Automation flows', 'Evaluation & safety'],
 			},
 		] satisfies Capability[],
 	},

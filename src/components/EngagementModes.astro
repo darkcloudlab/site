@@ -1,0 +1,131 @@
+---
+import type { EngagementMode } from '../content/site';
+
+type Props = {
+	modes: ReadonlyArray<EngagementMode>;
+};
+
+const { modes } = Astro.props;
+---
+
+<div class="grid">
+	{modes.map((m) => (
+		<article class="card mode">
+			<div class="pill">
+				<span class="dot" aria-hidden="true"></span>
+				<span>{m.tag}</span>
+			</div>
+			<h3 class="title">{m.title}</h3>
+			<p class="muted desc">{m.description}</p>
+			<ul class="list" role="list">
+				{m.bullets.map((b) => (
+					<li class="item">
+						<span class="check" aria-hidden="true"></span>
+						<span>{b}</span>
+					</li>
+				))}
+			</ul>
+			<a class="cta" href={m.cta.href}>
+				<span>{m.cta.label}</span>
+				<span aria-hidden="true">→</span>
+			</a>
+		</article>
+	))}
+</div>
+
+<style>
+	.grid {
+		display: grid;
+		grid-template-columns: 1fr;
+		gap: 1rem;
+	}
+
+	.mode {
+		padding: 1.25rem 1.2rem;
+		display: grid;
+		gap: 0.7rem;
+	}
+
+	.title {
+		margin: 0.2rem 0 0;
+		font-size: 1.2rem;
+		letter-spacing: -0.02em;
+	}
+	.desc {
+		margin: 0;
+		line-height: 1.65;
+		max-width: 70ch;
+	}
+
+	.dot {
+		width: 9px;
+		height: 9px;
+		border-radius: 999px;
+		background: rgba(var(--accent-1), 0.95);
+		box-shadow: 0 0 0 6px rgba(var(--accent-0), 0.16);
+	}
+
+	.list {
+		margin: 0.6rem 0 0;
+		padding: 0;
+		display: grid;
+		gap: 0.6rem;
+	}
+	.item {
+		list-style: none;
+		display: grid;
+		grid-template-columns: 18px 1fr;
+		align-items: start;
+		gap: 0.6rem;
+		color: rgba(var(--fog-1), 0.92);
+	}
+	.check {
+		width: 16px;
+		height: 16px;
+		border-radius: 6px;
+		background: linear-gradient(
+			180deg,
+			rgba(var(--fog-0), 0.16),
+			rgba(var(--fog-2), 0.08)
+		);
+		border: 1px solid rgba(var(--fog-2), 0.22);
+		position: relative;
+		top: 2px;
+	}
+	.check::after {
+		content: '';
+		position: absolute;
+		left: 4px;
+		top: 4px;
+		width: 6px;
+		height: 3px;
+		border-left: 2px solid rgba(var(--accent-1), 0.9);
+		border-bottom: 2px solid rgba(var(--accent-1), 0.9);
+		transform: rotate(-45deg);
+	}
+
+	.cta {
+		margin-top: 0.35rem;
+		display: inline-flex;
+		align-items: center;
+		gap: 0.5rem;
+		color: rgba(var(--fog-0), 0.9);
+		padding: 0.65rem 0.75rem;
+		border-radius: 999px;
+		border: 1px solid rgba(var(--fog-2), 0.2);
+		background: rgba(var(--bg-2), 0.16);
+		width: fit-content;
+		transition: transform 200ms var(--ease-out), background-color 200ms var(--ease-out);
+	}
+	.cta:hover {
+		transform: translateY(-1px);
+		background: rgba(var(--bg-2), 0.24);
+	}
+
+	@media (min-width: 880px) {
+		.grid {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+	}
+</style>
+
