@@ -25,7 +25,7 @@ export const site = {
 	},
 	proof: {
 		kicker: 'Built for teams who need clarity in complex environments.',
-		items: ['AI', 'Mobile', 'SaaS', 'Product', 'Design'],
+		items: [],
 	},
 	about: {
 		eyebrow: 'Who we are',

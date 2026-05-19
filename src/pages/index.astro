@@ -36,18 +36,20 @@ import ProjectsTable from '../components/ProjectsTable.astro';
 						<a class="btn" href={site.hero.secondaryCta.href}>{site.hero.secondaryCta.label}</a>
 					</div>
 
-					<div class="proof">
-						{site.proof.items.map((i) => (
-							<span class="proofItem">{i}</span>
-						))}
-					</div>
+					{site.proof.items.length ? (
+						<div class="proof">
+							{site.proof.items.map((i) => (
+								<span class="proofItem">{i}</span>
+							))}
+						</div>
+					) : null}
 				</div>
 
 				<div class="heroArt" aria-hidden="true">
 					<div class="plate">
 						<img class="heroLogo" src="/dcl-logo.svg" alt="" loading="eager" decoding="async" />
 					</div>
-					<div class="caption muted">PNW overcast palette + metallic mark.</div>
+					<div class="caption muted"></div>
 				</div>
 			</div>
 		</section>
@@ -271,7 +273,7 @@ import ProjectsTable from '../components/ProjectsTable.astro';
 		filter: drop-shadow(0 24px 60px rgba(0, 0, 0, 0.55));
 	}
 	.caption {
-		font-size: 0.9rem;
+		display: none;
 	}
 
 	.aboutGrid {
