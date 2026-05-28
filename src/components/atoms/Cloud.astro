@@ -53,10 +53,10 @@
 	} else {
 		const numPoints = 10;
 		const numPaths = paths.length;
-		// Faster refresh animation (≈2×)
-		const delayPointsMax = 0.11;
-		const delayPerPath = 0.09;
-		const duration = 0.43;
+		// Slightly faster than original (≈2/3 original duration)
+		const delayPointsMax = 0.146;
+		const delayPerPath = 0.12;
+		const duration = 0.57;
 
 		const pointsDelay: number[] = [];
 		const allPoints: number[][] = [];
@@ -72,7 +72,7 @@
 			onUpdate: render,
 			onComplete: () => {
 				overlay.style.opacity = '0';
-				setTimeout(() => overlay.remove(), 120);
+				setTimeout(() => overlay.remove(), 170);
 			},
 			defaults: { ease: 'power2.inOut', duration },
 		});
