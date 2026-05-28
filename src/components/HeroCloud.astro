@@ -60,6 +60,8 @@
 		private resizeObserver!: ResizeObserver;
 		private activePointerId: number | null;
 		private containerScale: number;
+		private meshWidth: number;
+		private meshHeight: number;
 
 		constructor(canvas: HTMLCanvasElement) {
 			this.scene = new THREE.Scene();
@@ -70,6 +72,7 @@
 			this.camera.lookAt(0, 0, 0);
 
 			this.renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+			this.renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
 
 			this.mouse = new THREE.Vector2(0, 0);
 			this.previousMouse = new THREE.Vector2(0, 0);
@@ -77,6 +80,8 @@
 			this.isPointerOver = false;
 			this.activePointerId = null;
 			this.containerScale = 1;
+			this.meshWidth = 60;
+			this.meshHeight = 80;
 
 			this.setupResizeObserver(canvas);
 			this.createMesh();
@@ -96,12 +101,15 @@
 
 			let scale = 1;
 			if (containerWidth < maxWidth) {
-				scale = Math.max(0.5, containerWidth / maxWidth);
+				// Keep it visually larger in constrained hero cards.
+				scale = Math.max(0.8, containerWidth / maxWidth);
 			}
 			this.containerScale = scale;
 
 			const width = baseWidth * scale;
 			const height = baseHeight * scale;
+			this.meshWidth = width;
+			this.meshHeight = height;
 
 			const gridX = 20;
 			const gridY = Math.floor(20 * (height / width));
@@ -249,9 +257,12 @@
 		private updateMesh(isDragging: boolean): void {
 			const positions = this.geometry.attributes.position.array as Float32Array;
 
-			// Keep interaction feel consistent when the mesh is scaled down.
 			const scale = this.containerScale || 1;
-			const mouseWorld = new THREE.Vector3(this.mouse.x * 60 * scale, this.mouse.y * 40 * scale, 0);
+			const mouseWorld = new THREE.Vector3(
+				this.mouse.x * this.meshWidth,
+				this.mouse.y * (this.meshHeight / 2),
+				0,
+			);
 			mouseWorld.applyAxisAngle(new THREE.Vector3(1, 0, 0), -Math.PI * 0.18);
 
 			const mouseDelta = isDragging
@@ -262,7 +273,7 @@
 				const vertexPosition = new THREE.Vector3(positions[i]!, positions[i + 1]!, positions[i + 2]!);
 				const distance = mouseWorld.distanceTo(vertexPosition);
 
-				const maxDistance = (isDragging ? 35 : 25) * scale;
+				const maxDistance = (isDragging ? 0.58 : 0.42) * this.meshWidth;
 				let influence = Math.max(0, 1 - distance / maxDistance);
 				if (isDragging) influence = Math.pow(influence, 1.5);
 
