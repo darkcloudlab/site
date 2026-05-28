@@ -84,7 +84,7 @@
 			const containerWidth = rect?.width || window.innerWidth;
 
 			// Larger base dimensions so the mesh fills the hero space.
-			const baseWidth = 84;
+			const baseWidth = 82;
 			const baseHeight = 112;
 			const maxWidth = 1024;
 
@@ -151,7 +151,7 @@
 			this.mesh = new THREE.LineSegments(this.geometry, this.material);
 			this.mesh.rotation.x = -Math.PI * 0.18;
 			// Tiny nudge to keep edges from clipping the canvas.
-			this.mesh.position.x = width * 0.04;
+			this.mesh.position.x = width * 0.02;
 			this.mesh.position.y = height * 0.03;
 			this.scene.add(this.mesh);
 		}
