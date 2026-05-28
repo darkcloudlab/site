@@ -84,17 +84,18 @@
 			const containerWidth = rect?.width || window.innerWidth;
 
 			// Larger base dimensions so the mesh fills the hero space.
-			const baseWidth = 90;
-			const baseHeight = 120;
+			const baseWidth = 84;
+			const baseHeight = 112;
 			const maxWidth = 1024;
 
 			let scale = 1;
 			if (containerWidth < maxWidth) {
 				// Keep it visually larger in constrained hero cards.
-				scale = Math.max(1.05, containerWidth / maxWidth);
+				scale = Math.max(0.95, containerWidth / maxWidth);
 			}
 			// Push the whole mesh larger, regardless of container width.
-			this.containerScale = scale * 1.15;
+			// (Slightly reduced to prevent clipping at canvas edges.)
+			this.containerScale = scale * 1.08;
 
 			const width = baseWidth * this.containerScale;
 			const height = baseHeight * this.containerScale;
