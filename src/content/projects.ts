@@ -5,16 +5,21 @@ export type Project = {
 	date?: string;
 	summary: string;
 	repoUrl?: string;
+	liveUrl?: string;
+	stack?: string[];
 };
 
 export const projects: Project[] = [
 	{
 		title: 'Thrive Pilot',
-		type: 'Internal tool',
+		type: 'Next.js + Supabase + Twilio',
 		slug: 'thrive-pilot',
+		date: '2026',
 		summary:
-			'A bespoke internal tool pilot focused on reducing operational friction: clearer workflows, fewer handoffs, and automation where it’s safe and measurable. Built with an emphasis on usability, reliability, and maintainability.',
+			'A Next.js pilot app for mentor ↔ participant communication, built around a secure invite + consent flow and reliable SMS messaging. Uses Supabase Auth + RLS for access control, Resend SMTP for invites, and Twilio for outbound + inbound messaging with delivery status tracking.',
 		repoUrl: 'https://github.com/heal3-dev/thrive-pilot',
+		liveUrl: 'https://thrive-pilot.vercel.app',
+		stack: ['Next.js', 'TypeScript', 'Supabase', 'Twilio', 'Resend (SMTP)', 'Vercel'],
 	},
 ];
 

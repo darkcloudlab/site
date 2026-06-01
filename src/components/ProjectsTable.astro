@@ -12,7 +12,7 @@ const { projects } = Astro.props;
 	<div class="head muted">
 		<div>Title</div>
 		<div>Type</div>
-		<div>Link</div>
+		<div>Links</div>
 	</div>
 	<div class="rows">
 		{projects.map((p) => (
@@ -23,11 +23,15 @@ const { projects } = Astro.props;
 				</a>
 				<div class="meta">{p.type}</div>
 				<div class="meta">
-					{p.repoUrl ? (
-						<a class="link" href={p.repoUrl} target="_blank" rel="noreferrer">GitHub →</a>
-					) : (
-						<span class="muted">—</span>
-					)}
+					<div class="links">
+						{p.liveUrl ? (
+							<a class="link" href={p.liveUrl} target="_blank" rel="noreferrer">Live →</a>
+						) : null}
+						{p.repoUrl ? (
+							<a class="link" href={p.repoUrl} target="_blank" rel="noreferrer">GitHub →</a>
+						) : null}
+						{!p.liveUrl && !p.repoUrl ? <span class="muted">—</span> : null}
+					</div>
 				</div>
 			</div>
 		))}
@@ -79,6 +83,11 @@ const { projects } = Astro.props;
 	}
 	.meta {
 		color: rgba(var(--fog-1), 0.9);
+	}
+	.links {
+		display: inline-flex;
+		gap: 0.75rem;
+		flex-wrap: wrap;
 	}
 	.link {
 		color: rgba(var(--fog-0), 0.9);
