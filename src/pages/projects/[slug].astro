@@ -35,27 +35,39 @@ const { project } = Astro.props;
 			<h1 class="title">{project.title}</h1>
 			<div class="meta">
 				<span class="pill">{project.type}</span>
-				<span class="pill">{project.date}</span>
+				{project.date ? <span class="pill">{project.date}</span> : null}
+				{project.repoUrl ? (
+					<a class="pill linkPill" href={project.repoUrl} target="_blank" rel="noreferrer">
+						GitHub ↗
+					</a>
+				) : null}
 			</div>
 		</header>
 
 		<section class="card block">
 			<h2 class="h2">Description</h2>
-			<p class="muted">
-				Placeholder: add a short narrative for what this project is, who it’s for, and what success looks like.
-			</p>
+			<p class="muted">{project.summary}</p>
 		</section>
 		<section class="card block">
 			<h2 class="h2">Challenges</h2>
-			<p class="muted">Placeholder: constraints, edge cases, and what made it hard.</p>
+			<p class="muted">
+				Aligning stakeholders on what to automate (and what to keep human-led), integrating across existing tools,
+				and keeping the UX simple enough that teams actually adopt it.
+			</p>
 		</section>
 		<section class="card block">
 			<h2 class="h2">Solution</h2>
-			<p class="muted">Placeholder: approach, architecture, and implementation highlights.</p>
+			<p class="muted">
+				A workflow-first internal tool with clear steps, guardrails, and operational visibility—so teams can move
+				faster while staying in control of decisions and outcomes.
+			</p>
 		</section>
 		<section class="card block">
 			<h2 class="h2">Outcome</h2>
-			<p class="muted">Placeholder: what shipped and what improved (metrics if available).</p>
+			<p class="muted">
+				A shippable pilot that demonstrates the end-to-end workflow, establishes the core architecture, and creates
+				a foundation for iterating toward production with real user feedback.
+			</p>
 		</section>
 
 		<div class="spacer"></div>
@@ -92,6 +104,9 @@ const { project } = Astro.props;
 		gap: 0.6rem;
 		margin-top: 0.85rem;
 		flex-wrap: wrap;
+	}
+	.linkPill {
+		border-color: rgba(var(--accent-1), 0.22);
 	}
 	.block {
 		padding: 1.1rem 1.15rem;

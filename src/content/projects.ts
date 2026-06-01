@@ -1,40 +1,20 @@
 export type Project = {
 	title: string;
-	date: string;
 	type: string;
 	slug: string;
+	date?: string;
+	summary: string;
+	repoUrl?: string;
 };
 
 export const projects: Project[] = [
 	{
-		title: 'Micro SaaS - Get your business connected',
-		date: '01/02/24',
-		type: 'SaaS',
-		slug: 'micro-saas-get-your-business-connected',
-	},
-	{
-		title: 'Evo - Redesign of the BC Evo App',
-		date: '01/02/24',
-		type: 'Client',
-		slug: 'evo-redesign-of-the-bc-evo-app',
-	},
-	{
-		title: 'AI Integration - getting your AI online',
-		date: '01/02/24',
-		type: 'Research',
-		slug: 'ai-integration-getting-your-ai-online',
-	},
-	{
-		title: 'ChatTo',
-		date: '01/02/24',
-		type: 'AI (Client)',
-		slug: 'chatto',
-	},
-	{
-		title: 'Interview Prep',
-		date: '01/02/24',
-		type: 'AI (Client)',
-		slug: 'interview-prep',
+		title: 'Thrive Pilot',
+		type: 'Internal tool',
+		slug: 'thrive-pilot',
+		summary:
+			'A bespoke internal tool pilot focused on reducing operational friction: clearer workflows, fewer handoffs, and automation where it’s safe and measurable. Built with an emphasis on usability, reliability, and maintainability.',
+		repoUrl: 'https://github.com/heal3-dev/thrive-pilot',
 	},
 ];
 
