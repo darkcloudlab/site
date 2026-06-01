@@ -64,22 +64,25 @@ const { project } = Astro.props;
 			<h2 class="h2">Challenges</h2>
 			<p class="muted">
 				Designing a workflow that’s safe by default (invite → consent → messaging), enforcing permissions via Supabase
-				RLS, and handling real-world messaging edge cases like opt-out keywords and carrier auto-replies.
+				RLS across multiple roles (admin/mentor/participant), and integrating external systems safely (Twilio signature-verified
+				webhooks, Garmin OAuth + push webhooks) without losing data integrity or auditability.
 			</p>
 		</section>
 		<section class="card block">
 			<h2 class="h2">Solution</h2>
 			<p class="muted">
-				A Next.js app backed by Supabase for auth/data and Twilio for SMS:
-				admins invite participants via email, participants accept consent via a magic link, mentors send outbound SMS,
-				and inbound/status webhooks persist message history and delivery state.
+				A Next.js app backed by Supabase for auth/data (with RLS), plus a set of focused API routes for operational workflows:
+				admin invites store participant metadata, consent acceptance creates the participant record, SMS send persists messages and
+				Twilio webhooks keep threads/statuses in sync, Garmin connection flows ingest wearable metrics, and weekly reports are generated
+				from metrics/templates with an admin revision step (optionally assisted via LLM) and sent through a queued email pipeline.
 			</p>
 		</section>
 		<section class="card block">
 			<h2 class="h2">Outcome</h2>
 			<p class="muted">
-				A working pilot with documented setup and clear API boundaries, ready for iteration: tightening UX, expanding
-				reporting, and hardening operations based on real participant/mentor feedback.
+				A working pilot with clear API boundaries and production-minded ops (idempotent webhook writes, audit logs, and cron-driven
+				queue processing), ready for iteration: tightening UX, expanding analytics/reporting, and hardening based on real
+				participant/mentor feedback.
 			</p>
 		</section>
 
