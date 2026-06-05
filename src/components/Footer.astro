@@ -5,6 +5,7 @@ type Props = {
 };
 const { brandName, links } = Astro.props;
 const year = new Date().getFullYear();
+const legalBrand = brandName.trim().match(/[.!?]$/) ? brandName.trim() : `${brandName.trim()}.`;
 ---
 
 <footer class="footer">
@@ -23,7 +24,7 @@ const year = new Date().getFullYear();
 			</nav>
 		</div>
 		<div class="bottom muted">
-			<span>© {year} {brandName}. All rights reserved.</span>
+			<span>© {year} {legalBrand} All rights reserved.</span>
 		</div>
 	</div>
 </footer>
