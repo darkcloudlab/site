@@ -31,7 +31,7 @@ export const site = {
 		eyebrow: 'Who we are',
 		title: 'A small team that ships.',
 		lead:
-			'Founded by two builders focused on the intersection of artificial intelligence, mobile applications, and intuitive design. We aim to create software that doesn’t just work — it delights.',
+			'Founded by two builders focused on the intersection of artificial intelligence, mobile applications, and intuitive design. We aim to create software that doesn’t just work; it delights.',
 	},
 	approach: {
 		eyebrow: 'Approach',
@@ -81,7 +81,7 @@ export const site = {
 		eyebrow: 'Services',
 		title: 'What we do',
 		lead:
-			'We build end-to-end: from product strategy and design to engineering and AI. These are the lanes we’re best in — and we can tailor them to your context.',
+			'We build end-to-end: from product strategy and design to engineering and AI. These are the lanes we’re best in, and we can tailor them to your context.',
 		items: [
 			{
 				verb: 'Design',
@@ -114,11 +114,11 @@ export const site = {
 		points: [
 			{
 				title: 'Senior-first',
-				body: 'Small teams of experienced engineers—fewer meetings, faster decisions.',
+				body: 'Small teams of experienced engineers, fewer meetings, faster decisions.',
 			},
 			{
 				title: 'Transparent delivery',
-				body: 'Roadmaps, risks, and trade-offs made explicit—no surprises at launch.',
+				body: 'Roadmaps, risks, and trade-offs made explicit, with no surprises at launch.',
 			},
 			{
 				title: 'Built to last',
@@ -141,6 +141,7 @@ export const site = {
 		},
 	},
 	footer: {
+		brandName: 'DarkCloudLab Ltd.',
 		links: [
 			{ label: 'Approach', href: '#approach' },
 			{ label: 'Services', href: '#services' },

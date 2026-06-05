@@ -15,7 +15,7 @@ export function getStaticPaths() {
 const { project } = Astro.props;
 ---
 
-<Layout title={`${project.title} — ${site.name}`}>
+<Layout title={`${project.title} | ${site.name}`}>
 	<Header
 		brand={{ name: site.name, tagline: site.tagline }}
 		links={[
@@ -89,7 +89,7 @@ const { project } = Astro.props;
 		<div class="spacer"></div>
 	</main>
 
-	<Footer brandName={site.name} links={site.footer.links} />
+	<Footer brandName={site.footer.brandName} links={site.footer.links} />
 </Layout>
 
 <style>

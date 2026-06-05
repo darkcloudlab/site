@@ -11,7 +11,7 @@ import { projects } from '../content/projects';
 import ProjectsTable from '../components/ProjectsTable.astro';
 ---
 
-<Layout title={`${site.name} — ${site.hero.heading}`} description={site.hero.subheading}>
+<Layout title={`${site.name} | ${site.hero.heading}`} description={site.hero.subheading}>
 	<Header
 		brand={{ name: site.name, tagline: site.tagline }}
 		links={[
@@ -70,7 +70,7 @@ import ProjectsTable from '../components/ProjectsTable.astro';
 				<article class="card aboutCard">
 					<h3 class="aboutTitle">Intelligent solutions</h3>
 					<p class="muted aboutBody">
-						We build products where AI meets usability — from mobile applications to scalable SaaS.
+						We build products where AI meets usability, from mobile applications to scalable SaaS.
 						The goal is always the same: ship something people can trust, understand, and keep using.
 					</p>
 				</article>
@@ -178,7 +178,7 @@ import ProjectsTable from '../components/ProjectsTable.astro';
 			</form>
 		</Section>
 
-		<Footer brandName={site.name} links={site.footer.links} />
+		<Footer brandName={site.footer.brandName} links={site.footer.links} />
 	</main>
 </Layout>
 

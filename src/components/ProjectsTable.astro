@@ -30,7 +30,7 @@ const { projects } = Astro.props;
 						{p.repoUrl ? (
 							<a class="link" href={p.repoUrl} target="_blank" rel="noreferrer">GitHub →</a>
 						) : null}
-						{!p.liveUrl && !p.repoUrl ? <span class="muted">—</span> : null}
+						{!p.liveUrl && !p.repoUrl ? <span class="muted">None</span> : null}
 					</div>
 				</div>
 			</div>
