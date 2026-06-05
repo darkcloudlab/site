@@ -1,0 +1,110 @@
+---
+// Cloud.astro
+// Full-screen “fog” overlay that plays on first paint / refresh.
+---
+
+<svg
+	class="shape-overlays"
+	viewBox="0 0 100 100"
+	preserveAspectRatio="none"
+	aria-hidden="true"
+>
+	<defs>
+		<linearGradient id="p1" x1="0%" y1="0%" x2="0%" y2="100%">
+			<stop offset="0%" stop-color="#E8EEF4" stop-opacity="0.9"></stop>
+			<stop offset="100%" stop-color="#8C9BAA" stop-opacity="0.55"></stop>
+		</linearGradient>
+		<linearGradient id="p2" x1="0%" y1="0%" x2="0%" y2="100%">
+			<stop offset="0%" stop-color="#C1CCD6" stop-opacity="0.75"></stop>
+			<stop offset="100%" stop-color="#7AA6C2" stop-opacity="0.45"></stop>
+		</linearGradient>
+		<linearGradient id="p3" x1="0%" y1="0%" x2="0%" y2="100%">
+			<stop offset="0%" stop-color="#E8EEF4" stop-opacity="0.45"></stop>
+			<stop offset="100%" stop-color="#0C1016" stop-opacity="0.35"></stop>
+		</linearGradient>
+	</defs>
+	<path class="shape-overlays__path" fill="url(#p1)"></path>
+	<path class="shape-overlays__path" fill="url(#p2)"></path>
+	<path class="shape-overlays__path" fill="url(#p3)"></path>
+</svg>
+
+<style>
+	.shape-overlays {
+		width: 100vw;
+		height: 100vh;
+		position: fixed;
+		top: 0;
+		left: 0;
+		z-index: 9999;
+		pointer-events: none;
+	}
+</style>
+
+<script>
+	import gsap from 'gsap';
+
+	const overlay = document.querySelector<SVGSVGElement>('.shape-overlays');
+	const paths = document.querySelectorAll<SVGPathElement>('.shape-overlays__path');
+
+	if (!overlay || paths.length === 0) {
+		// Nothing to animate.
+	} else if (window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches) {
+		overlay.remove();
+	} else {
+		const numPoints = 10;
+		const numPaths = paths.length;
+		// Slightly faster than original (≈2/3 original duration)
+		const delayPointsMax = 0.146;
+		const delayPerPath = 0.12;
+		const duration = 0.57;
+
+		const pointsDelay: number[] = [];
+		const allPoints: number[][] = [];
+		for (let i = 0; i < numPaths; i++) {
+			const points: number[] = [];
+			allPoints.push(points);
+			for (let j = 0; j < numPoints; j++) points.push(100);
+		}
+
+		let isOpened = true; // start “closed” (covering page)
+
+		const tl = gsap.timeline({
+			onUpdate: render,
+			onComplete: () => {
+				overlay.style.opacity = '0';
+				setTimeout(() => overlay.remove(), 170);
+			},
+			defaults: { ease: 'power2.inOut', duration },
+		});
+
+		for (let i = 0; i < numPoints; i++) {
+			pointsDelay[i] = Math.random() * delayPointsMax;
+		}
+
+		for (let i = 0; i < numPaths; i++) {
+			const points = allPoints[i]!;
+			const pathDelay = delayPerPath * i;
+			for (let j = 0; j < numPoints; j++) {
+				const delay = pointsDelay[j];
+				tl.to(points, { [j]: 0 }, delay + pathDelay);
+			}
+		}
+
+		function render() {
+			for (let i = 0; i < numPaths; i++) {
+				const path = paths[i]!;
+				const points = allPoints[i]!;
+				let d = '';
+				d += isOpened ? `M 0 0 V ${points[0]} C` : `M 0 ${points[0]} C`;
+				for (let j = 0; j < numPoints - 1; j++) {
+					const p = ((j + 1) / (numPoints - 1)) * 100;
+					const cp = p - ((1 / (numPoints - 1)) * 100) / 2;
+					d += ` ${cp} ${points[j]} ${cp} ${points[j + 1]} ${p} ${points[j + 1]}`;
+				}
+				d += isOpened ? ` V 100 H 0` : ` V 0 H 0`;
+				path.setAttribute('d', d);
+			}
+		}
+	}
+</script>
+

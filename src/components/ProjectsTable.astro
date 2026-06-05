@@ -1,0 +1,113 @@
+---
+import type { Project } from '../content/projects';
+
+type Props = {
+	projects: ReadonlyArray<Project>;
+};
+
+const { projects } = Astro.props;
+---
+
+<div class="wrap card">
+	<div class="head muted">
+		<div>Title</div>
+		<div>Type</div>
+		<div>Links</div>
+	</div>
+	<div class="rows">
+		{projects.map((p) => (
+			<div class="row">
+				<a class="titleWrap" href={`/projects/${p.slug}`}>
+					<div class="title">{p.title}</div>
+					<div class="summary muted">{p.summary}</div>
+				</a>
+				<div class="meta">{p.type}</div>
+				<div class="meta">
+					<div class="links">
+						{p.liveUrl ? (
+							<a class="link" href={p.liveUrl} target="_blank" rel="noreferrer">Live →</a>
+						) : null}
+						{p.repoUrl ? (
+							<a class="link" href={p.repoUrl} target="_blank" rel="noreferrer">GitHub →</a>
+						) : null}
+						{!p.liveUrl && !p.repoUrl ? <span class="muted">—</span> : null}
+					</div>
+				</div>
+			</div>
+		))}
+	</div>
+</div>
+
+<style>
+	.wrap {
+		padding: 0.75rem;
+		overflow: hidden;
+	}
+	.head {
+		display: grid;
+		grid-template-columns: 1.6fr 0.7fr 0.5fr;
+		gap: 1rem;
+		padding: 0.9rem 1rem;
+		border-bottom: 1px solid rgba(var(--fog-2), 0.14);
+		font-size: 0.95rem;
+	}
+	.rows {
+		display: grid;
+	}
+	.row {
+		display: grid;
+		grid-template-columns: 1.6fr 0.7fr 0.5fr;
+		gap: 1rem;
+		padding: 1.1rem 1rem;
+		border-radius: 14px;
+		color: rgba(var(--fog-0), 0.9);
+		transition: background-color 200ms var(--ease-out), transform 200ms var(--ease-out);
+	}
+	.row:hover {
+		background: rgba(var(--bg-2), 0.22);
+		transform: translateY(-1px);
+	}
+	.titleWrap {
+		display: grid;
+		gap: 0.45rem;
+		min-width: 0;
+	}
+	.title {
+		font-weight: 600;
+		letter-spacing: -0.01em;
+		line-height: 1.25;
+	}
+	.summary {
+		line-height: 1.55;
+		max-width: 70ch;
+	}
+	.meta {
+		color: rgba(var(--fog-1), 0.9);
+	}
+	.links {
+		display: inline-flex;
+		gap: 0.75rem;
+		flex-wrap: wrap;
+	}
+	.link {
+		color: rgba(var(--fog-0), 0.9);
+		border-bottom: 1px solid rgba(var(--fog-2), 0.25);
+		padding-bottom: 0.15rem;
+	}
+	.link:hover {
+		border-bottom-color: rgba(var(--fog-1), 0.35);
+	}
+	@media (max-width: 720px) {
+		.head,
+		.row {
+			grid-template-columns: 1fr;
+		}
+		.head {
+			display: none;
+		}
+		.row {
+			gap: 0.35rem;
+		}
+	}
+</style>
+
