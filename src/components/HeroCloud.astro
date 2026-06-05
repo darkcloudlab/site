@@ -101,7 +101,7 @@
 
 			// Tighter framing so the mesh reads larger on desktop,
 			// while still leaving a bit of safe margin for resizes.
-			const pad = 1.04;
+			const pad = 1;
 			const dir = this.camera.position.clone().sub(center).normalize();
 			if (![dir.x, dir.y, dir.z].every(Number.isFinite) || dir.lengthSq() < 1e-6) {
 				dir.set(0, -1, 1).normalize();
