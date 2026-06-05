@@ -191,6 +191,7 @@
 				this.updateSize();
 				this.createMesh();
 				this.frameToView();
+				this.render();
 			});
 			const container = canvas.parentElement;
 			if (container) this.resizeObserver.observe(container);
@@ -203,6 +204,7 @@
 			this.renderer.setSize(rect.width, rect.height, false);
 			this.camera.aspect = rect.width / rect.height;
 			this.camera.updateProjectionMatrix();
+			this.render();
 		}
 
 		private setupEventListeners(canvas: HTMLCanvasElement): void {
