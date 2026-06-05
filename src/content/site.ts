@@ -141,6 +141,7 @@ export const site = {
 		},
 	},
 	footer: {
+		brandName: 'DarkCloudLab LTD.',
 		links: [
 			{ label: 'Approach', href: '#approach' },
 			{ label: 'Services', href: '#services' },
