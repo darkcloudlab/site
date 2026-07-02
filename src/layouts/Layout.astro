@@ -160,12 +160,11 @@ import Cloud from '../components/atoms/Cloud.astro';
 		box-shadow: var(--shadow-sm);
 		backdrop-filter: blur(10px);
 		-webkit-backdrop-filter: blur(10px);
+		transition: border-color 350ms var(--ease-out);
 	}
 
 	.card:hover {
 		border-color: rgba(var(--fog-1), 0.28);
-		transform: translateY(-2px);
-		transition: transform 350ms var(--ease-out), border-color 350ms var(--ease-out);
 	}
 
 	.btn {
